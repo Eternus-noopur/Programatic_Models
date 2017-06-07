@@ -9,13 +9,18 @@ Q1.Write a soql query to retrieve sum of all closed Opportunity amount for curre
 public class FiscalYearAmount {
 	
 	public static void sumFicalYearAmount(){
-        Integer currentYear = System.Today().year();
-		List<AggregateResult> opportunityList = new List<AggregateResult>([Select  SUM (Amount) FROM Opportunity where FiscalYear=:currentYear AND StageName='Closed Won' ] );
+        Integer year;
+        Double amount;
+		List<AggregateResult> opportunityList = [SELECT Sum(Amount),FiscalYear FROM Opportunity WHERE StageName = 'Closed Won' group by FiscalYear];
         system.debug( opportunityList );
        
-        Map < Integer,  Object> sumAmount= new Map < Integer,  Object>();
-        
-        sumAmount.put( currentYear,opportunityList[0].get('expr0'));
+        Map < Integer, Double> sumAmount= new Map < Integer, Double>();
+        for(AggregateResult o : opportunityList)
+        {
+            amount = (Double)o.get('expr0');
+            year = (Integer)o.get('FiscalYear');
+            sumAmount.put(year, amount);
+        }
         system.debug( sumAmount );
 
 	}
