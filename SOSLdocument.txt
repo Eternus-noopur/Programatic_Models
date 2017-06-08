@@ -1,0 +1,4 @@
+SOSL
+Q2. Describe SOSL limits
+Ans.1)20 SOSL queries can be done in one transaction.
+	2)The search engine looks for matches to the search term across a maximum of 2,000 records.
