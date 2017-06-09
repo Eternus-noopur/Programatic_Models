@@ -19,9 +19,10 @@ happen.
     <apex:form >
         <apex:pageblock>
                     <b>Campaign Detail </b>
+                    <apex:commandLink style="Float:Right" action="{!URLFOR($Action.Campaign.Delete, Campaign.Id)}" value="|Delete" onclick=" return confirmDelete('Do you want to proceed?')"  />
                     <apex:commandLink style="Float:Right" action="{!URLFOR($Action.Campaign.Clone, Campaign.Id)}" value="|Copy" /> 
-                    <apex:commandLink style="Float:Right" action="{!URLFOR($Action.Campaign.Edit, Campaign.Id)}" value="|Edit" />
-                    <apex:commandLink style="Float:Right" action="{!URLFOR($Action.Campaign.Delete, Campaign.Id)}" value="Delete" onclick=" return confirmDelete('Do you want to proceed?')"  />
+                    <apex:commandLink style="Float:Right" action="{!URLFOR($Action.Campaign.Edit, Campaign.Id)}" value="Edit" />
+                    
 
             <apex:pageBlockSection >
                 <apex:OutputField value="{!Campaign.Ownerid}" />
