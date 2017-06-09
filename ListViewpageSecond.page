@@ -17,16 +17,12 @@ happen.
 
 <apex:page StandardController="Campaign">
     <apex:form >
-        <apex:pageblock >
-            <table>
-                <tr>
-                    <td><b>Campaign Detail </b></td>
-                    <td><apex:commandLink style="Float:Right" action="{!URLFOR($Action.Campaign.Clone, Campaign.Id)}" value="|Copy" /> 
+        <apex:pageblock>
+                    <b>Campaign Detail </b>
+                    <apex:commandLink style="Float:Right" action="{!URLFOR($Action.Campaign.Clone, Campaign.Id)}" value="|Copy" /> 
                     <apex:commandLink style="Float:Right" action="{!URLFOR($Action.Campaign.Edit, Campaign.Id)}" value="|Edit" />
-                    <apex:commandLink style="Float:Right" action="{!URLFOR($Action.Campaign.Delete, Campaign.Id)}" value="Delete" onclick=" return confirmDelete('Do you want to proceed?')"  /></td>
+                    <apex:commandLink style="Float:Right" action="{!URLFOR($Action.Campaign.Delete, Campaign.Id)}" value="Delete" onclick=" return confirmDelete('Do you want to proceed?')"  />
 
-                </tr>
-            </table>
             <apex:pageBlockSection >
                 <apex:OutputField value="{!Campaign.Ownerid}" />
                 <apex:OutputField value="{!Campaign.Name}" />
