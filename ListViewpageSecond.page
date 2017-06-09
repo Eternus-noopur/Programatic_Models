@@ -1,0 +1,45 @@
+<!-- 
+Campaign detail page
+
+1. Design the campaign detail page as per the screenshot shown below.
+2. The url of the page should include the campaign record id so that the details of the campaign can
+be shown on the page.
+3. On click of the Edit link, the page should be displayed in edit mode so that user can make changes
+to the fields and on click of the save button, the details should be saved and page should go back in
+view mode.
+4. On click of the Delete link, a confirmation should be shown to the user so as to indicate whether the
+record need to be deleted or not. If the user chooses to delete the record then delete the record and
+redirect to the campaign tab and if the user opt for not deleting the record then nothing should
+happen.       
+
+ -->
+
+
+<apex:page StandardController="Campaign">
+    <apex:form >
+        <apex:pageblock >
+            <table>
+                <tr>
+                    <td><b>Campaign Detail </b></td>
+                    <td><apex:commandLink style="Float:Right" action="{!URLFOR($Action.Campaign.Clone, Campaign.Id)}" value="|Copy" /> 
+                    <apex:commandLink style="Float:Right" action="{!URLFOR($Action.Campaign.Edit, Campaign.Id)}" value="|Edit" />
+                    <apex:commandLink style="Float:Right" action="{!URLFOR($Action.Campaign.Delete, Campaign.Id)}" value="Delete" onclick=" return confirmDelete('Do you want to proceed?')"  /></td>
+
+                </tr>
+            </table>
+            <apex:pageBlockSection >
+                <apex:OutputField value="{!Campaign.Ownerid}" />
+                <apex:OutputField value="{!Campaign.Name}" />
+                <apex:OutputField value="{!Campaign.StartDate}" />
+                <apex:OutputField value="{!Campaign.EndDate}" />
+                <apex:OutputField value="{!Campaign.CreatedByid}" />
+                <apex:OutputField value="{!Campaign.LastModifiedByid}" />
+                <apex:OutputField value="{!Campaign.Description}" />
+                <apex:OutputField value="{!Campaign.Type}" />
+                <apex:OutputField value="{!Campaign.NumberSent}" />
+                <apex:OutputField value="{!Campaign.parentid}" />
+                 <apex:OutputField value="{!Campaign.Status}" />
+            </apex:pageBlockSection>
+        </apex:pageblock>
+    </apex:form>
+</apex:page>
