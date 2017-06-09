@@ -1,0 +1,46 @@
+<!-- 
+Campaign management landing page
+
+1. We need to create “Campaign Management” landing page (CM_Campaign_Landing) as per the
+design shown in following screen shot.
+2. On initial load, the page always displays a “Recently Modified” list view.
+3. Find below the different list views and the filter criteria on basis of which the records should be
+filtered for display.
+4. Pagination should be implemented for more than 20 records.
+5. On click of campaign name, page should redirect to the Campaign Detail page.
+6. It is recommended to use the standard controller, if any additional behavior is required implement
+controller extension
+-->
+
+
+<apex:page controller="ListViewDemo">
+    <apex:form id="pageForm">
+        
+            <apex:pageblock >
+                <apex:pageblockSection title="User Driven Campaigns">
+                    <apex:selectList value="{!camFilterId}" size="1" id="filterMenu">
+                        <apex:selectOptions value="{!CampaignExistingViews}"></apex:selectOptions>
+                        <apex:actionSupport event="onchange"  action="{!resetFilter}" rerender="CamTable" status="ajaxStatus"/>
+                    </apex:selectList>
+                <apex:actionStatus id="ajaxStatus" startText="Loading..."  stopText=""/>
+                </apex:pageblockSection>
+            </apex:pageblock>
+            <apex:pageBlock >
+                <apex:pageBlockButtons >
+                   
+                    <apex:commandButton action="{!prev}" value="< Previous" reRender="CamTable"  status="ajaxStatus" />
+                    <apex:commandButton action="{!next}" value="Next >" reRender="CamTable"  status="ajaxStatus" />
+                   
+                </apex:pageBlockButtons>
+                <apex:pageBlockTable value="{!Campaigns}" var="campaignVar" id="CamTable">
+                    
+                    <apex:column >
+                        <apex:commandLink action="{! $Page.ListViewpageSecond}?id={! campaignVar.id}" value="{!campaignVar.Name}"/>
+                     </apex:column>
+                    <apex:column value="{!campaignVar.Status }"/>
+                    <apex:column value="{!campaignVar.Type }"/>
+                    <apex:column value="{!campaignVar.StartDate }"/>
+                    </apex:pageBlockTable>
+            </apex:pageBlock>
+    </apex:form>
+</apex:page>
