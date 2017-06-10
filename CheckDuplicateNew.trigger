@@ -12,33 +12,33 @@ Q4. Contact Duplicate Check Trigger:
 -------------------------------------------------------------------------------------------*/
 
 trigger CheckDuplicateNew on Contact (before insert, before update) {
-    TriggerSetting__c triggerSettingInstance= TriggerSetting__c.getInstance();
-        if(triggerSettingInstance.ContactObject__c)
+    //TriggerSetting__c triggerSettingInstance= TriggerSetting__c.getInstance();
+      //  if(triggerSettingInstance.ContactObject__c)
         {
-	       Set<String> Email= new set<String>();
-	       Set<String> MobilePhone= new set<String>();
+	       Set<String> emailSet= new set<String>();
+	       Set<String> mobilePhoneSet= new set<String>();
    	       For (Contact con:Trigger.new)
    	       {
             if(con.Email!=null)
      	    {
-     	      if(Email.contains(con.Email))
+     	      if(emailSet.contains(con.Email))
       	      {
                 con.addError('Record already exist');
       	      }
     	      else
        	      {
-                Email.add(con.Email);
+                emailSet.add(con.Email);
        	      }
             }
 	           if(con.MobilePhone!=null)
                {
-                if(MobilePhone.contains(con.MobilePhone))
+                if(mobilePhoneSet.contains(con.MobilePhone))
        	        {
         	       con.addError('Record already exist');
       	        }
     	        else
        	        {
-        	       MobilePhone.add(con.MobilePhone);
+        	       mobilePhoneSet.add(con.MobilePhone);
        	        }
                }
             }
@@ -66,5 +66,5 @@ trigger CheckDuplicateNew on Contact (before insert, before update) {
                 }
             }
         }       
-    } 
+  //  } 
 }
