@@ -26,13 +26,13 @@ private class CloningTestClass {
             List<Account> accountList=AccontFactoryNew.createAndInsertAccounts(1);  
           system.Test.stopTest();
             List<Account> accounts= [Select Id from Account where Name like 'Account%' ];  
-          system.assertEquals(2,accounts.size());
+          system.assertEquals(2*accountList.size(),accounts.size());
     }
     testMethod static void CloneUnitTestForBulk() {
          system.Test.startTest();
             List<Account> accountList=AccontFactoryNew.createAndInsertAccounts(200);
          system.Test.stopTest();
             List<Account> accounts= [Select Id from Account where Name like 'Account%' ];  
-         system.assertEquals(400,accounts.size());
+         system.assertEquals(2*accountList.size(),accounts.size());
     }
 }
