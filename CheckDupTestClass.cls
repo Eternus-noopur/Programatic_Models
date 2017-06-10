@@ -27,7 +27,7 @@ private class CheckDupTestClass {
         List<contact> contactList=ContactFactoryNew.createAndInsertContacts(1);
         system.Test.stopTest();
         List<contact> contacts=[Select Id from contact where FirstName like 'Contact%']; 
-        system.assertEquals(1,contacts.size());
+        system.assertEquals(contactList.size(),contacts.size());
      }
      
      
@@ -36,18 +36,21 @@ private class CheckDupTestClass {
         List<contact> contactList=ContactFactoryNew.createAndInsertContacts(100);
         system.Test.stopTest();
         List<contact> contacts=[Select Id from contact where FirstName like 'Contact%']; 
-        system.assertEquals(100,contacts.size());
+        system.assertEquals(contactList.size(),contacts.size());
      }
      
      
      static testMethod void CheckDuplicatesForNullEmailSingleRecord() {
         system.Test.startTest();
-        Contact con=ContactFactoryNew.createRecordsInContact(1)[0];  
-        con.email = null;
-        insert con;
+        List <Contact> conList=ContactFactoryNew.createRecordsInContact(1);
+        for(Contact con:conList )  
+        {
+            con.email = null;
+        }
+        insert conList;
         system.Test.stopTest(); 
         List<contact> contacts=[Select Id from contact where FirstName like 'Contact%'];
-        system.assertEquals(1,contacts.size());
+        system.assertEquals(conList.size(),contacts.size());
      }
      
      
@@ -61,18 +64,21 @@ private class CheckDupTestClass {
         insert contactlist;
         system.Test.stopTest();
         List<contact> contacts=[Select Id from contact where FirstName like 'Contact%'];
-        system.assertEquals(100,contacts.size());
+        system.assertEquals(contactList.size(),contacts.size());
       }
       
       
       static testMethod void CheckDuplicatesForNullMobileNumberSingleRecord(){
         system.Test.startTest();
-        Contact con=ContactFactoryNew.createRecordsInContact(1)[0];
-        con.MobilePhone=null;
-        insert con;  
+        List<Contact> conList=ContactFactoryNew.createRecordsInContact(1);
+        for(Contact con : conList)
+        {
+            con.MobilePhone=null;
+        }
+        insert conList;  
         system.Test.stopTest();
         List<contact> contacts=[Select Id from contact where FirstName like 'Contact%'];
-        system.assertEquals(1,contacts.size());
+        system.assertEquals(conList.size(),contacts.size());
       }
       
       
@@ -86,7 +92,7 @@ private class CheckDupTestClass {
         insert contactList;    
         system.Test.stopTest();
         List<contact> contacts=[Select Id from contact where FirstName like 'Contact%'];
-        system.assertEquals(100,contacts.size());
+        system.assertEquals(contactList.size(),contacts.size());
       }
       
       
@@ -113,20 +119,16 @@ private class CheckDupTestClass {
         insert contactList;
         system.Test.stopTest();
         List<contact> contacts=[Select Id from contact where FirstName like 'Contact%'];
-        system.assertEquals(100,contacts.size());
+        system.assertEquals(contactList.size(),contacts.size());
       }
       
       
       static testMethod void CheckDuplicatesForEmailErrorForSingleRecord() {
         system.Test.startTest(); 
-        List<contact> contactList=ContactFactoryNew.createAndInsertContacts(1);
-      
+        List <Contact> conList=ContactFactoryNew.createRecordsInContact(1);
         try
-        {
-            Contact con=ContactFactoryNew.createAndInsertContacts(1)[0];
-            con.Email=contactList[0].Email;
-            insert con;
-   
+        { 
+            insert conList;
         }
         catch(Exception e)
         {
@@ -135,18 +137,15 @@ private class CheckDupTestClass {
         }
         system.Test.stoptest(); 
         List<contact> contacts=[Select Id from contact where FirstName like 'Contact%'];
-        System.AssertEquals(1,contacts.size() );
+        System.AssertEquals(conList.size(),contacts.size() );
       }
       
       static testMethod void CheckDuplicatesForEmailErrorForBulk() {
         system.Test.startTest();
-        List<contact> contactList=ContactFactoryNew.createAndInsertContacts(10);
-       
-        
+        List<contact> conList=ContactFactoryNew.createAndInsertContacts(10); 
         try
         {
-             List<contact> conList=ContactFactoryNew.createAndInsertContacts(1); 
-             insert conList;
+            insert conList;
         }
         catch(Exception e)
         {
@@ -154,34 +153,30 @@ private class CheckDupTestClass {
             
         }
         List<contact> contacts=[Select Id from contact where FirstName like 'Contact%']; 
-        System.AssertEquals(10,contacts.size() );
+        System.AssertEquals(conList.size(),contacts.size() );
       }
 
       static testMethod void CheckDuplicatesForMobileErrorForSingleRecord() {
         system.Test.startTest();
-        List<contact> contactList=ContactFactoryNew.createAndInsertContacts(1);
+        List<Contact> conList=ContactFactoryNew.createRecordsInContact(1);
         try
         {
-            Contact con=ContactFactoryNew.createRecordsInContact(1)[0];
-            insert con;
-   
+            insert conList;
         }
         catch(Exception e)
         {
             Boolean expectedExceptionThrown = e.getMessage().contains('Record already exist') ? true : false;
-            
         }
         system.Test.stoptest(); 
         List<contact> contacts=[Select Id from contact where FirstName like 'Contact%'];
-        System.AssertEquals(1,contacts.size() );
+        System.AssertEquals(conList.size(),contacts.size() );
       }
       
       static testMethod void CheckDuplicatesForMobileErrorForBulk() {
         system.Test.startTest();
-        List<contact> contactList=ContactFactoryNew.createAndInsertContacts(10);
+        List<contact> conList=ContactFactoryNew.createRecordsInContact(10);
         try
         {
-             List<contact> conList=ContactFactoryNew.createRecordsInContact(10);
              insert conList;
         }
         catch(Exception e)
@@ -189,7 +184,7 @@ private class CheckDupTestClass {
             Boolean expectedExceptionThrown = e.getMessage().contains('Record already exist') ? true : false;
         }
         List<contact> contacts=[Select Id from contact where FirstName like 'Contact%']; 
-        System.AssertEquals(10,contacts.size());
+        System.AssertEquals(conList.size(),contacts.size());
         
       }
 }
