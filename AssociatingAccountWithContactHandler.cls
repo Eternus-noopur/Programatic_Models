@@ -2,32 +2,28 @@ public with sharing class AssociatingAccountWithContactHandler {
     
     public static void ContactAccontAssociation(List<Contact> contactList)
     {
-        Set<String> emailDomainSet= new  Set<String> ();
+        Map<String, List<Contact>> emailDomainMap= new  Map<String, List<Contact>>();
+        String emailDomain;
         for(Contact con:contactList)
         {
-            if(con.Email==NULL)
+            if(con.Email != NULL)
             {
-                continue;
+                emailDomain = con.Email.split('@').get(1);
+                if(!emailDomainMap.keySet().contains(emailDomain)) {
+                    emailDomainMap.put(emailDomain, new List<Contact>());
+                }
+                emailDomainMap.get(emailDomain).add(con);
             }
-        emailDomainSet.add(con.Email.split('@').get(1));
         }
-        if(!emailDomainSet.IsEmpty())
+        if(!emailDomainMap.IsEmpty())
         {
-            Map<String,Id> accountContactMap = new Map<String,Id>();
-            for (Account acc: [Select Id, DomainName__c from Account where DomainName__c IN : emailDomainSet ])
+            for (Account acc: [Select Id, DomainName__c from Account where DomainName__c IN : emailDomainMap.keySet() ])
 	        {
-	           accountContactMap.put(acc.DomainName__c,acc.Id);
+	           for(Contact c : emailDomainMap.get(acc.DomainName__c))
+	           {
+	               c.accountId = acc.Id;
+	           }
 	        }
-	        for (Contact cnt : contactList) {
-                if (cnt.Email == null)
-                {
-                    continue;
-                }
-                String domain = cnt.Email.split('@').get(1);
-                if (accountContactMap.containsKey(domain)) {
-                    cnt.AccountId = accountContactMap.get(domain);
-                }
-        }
         }
     }    
 }
