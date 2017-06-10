@@ -23,23 +23,23 @@
 public class BestPracticesTestClass {
 
     static testMethod void AssociatingContactWithAccount() {
+        List<Account> accountList = AccontFactoryNew.createAndInsertAccounts(1);
         system.Test.startTest();
-        AccontFactoryNew.createAndInsertAccounts(1);
         List<Contact> contactList = ContactFactoryNew.createAndInsertContacts(1);
         system.Test.stopTest();
         Contact con=[Select Id, name ,Account.Name from Contact][0];
-        System.assertEquals('Account1',con.Account.Name);
+        System.assertEquals(accountList[0].name,con.Account.Name);
     }
     
     static testMethod void AssociatingContactWithAccountBulk() {
+        List<Account> accountList = AccontFactoryNew.createAndInsertAccounts(1);
         system.Test.startTest();
-        AccontFactoryNew.createAndInsertAccounts(1);
         List<Contact> contactList = ContactFactoryNew.createAndInsertContacts(10);
         system.Test.stopTest();
         List<Contact> con=[Select Id, name ,Account.Name from Contact];
         for(Contact contact:con)
         {
-            System.assertEquals('Account1',contact.Account.Name);
+            System.assertEquals(accountList[0].name,contact.Account.Name);
         }
     }
     
