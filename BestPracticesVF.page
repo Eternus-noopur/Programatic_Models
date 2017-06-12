@@ -1,0 +1,93 @@
+<!-- 
+ABC Containers require the ability to automatically associate a Contact created
+in their Salesforce Instance with the respective Account based on the email
+domain specified in the primary email address of the Contact. The association
+should happen real time as soon as a Contact record is created within the
+system.
+
+TODO:
+-Ensure all the discussed implementation best practices are followed.
+-Develop the necessary piece of Apex code to implement a solution for the given problem statement.
+-Develop the necessary Test code to attain the right code coverage (minimum 90% with at least 4 test cases).
+
+ -->
+
+<apex:page standardController="Invoice_Containers__c" extensions="ABCExtension" renderAs="PDF">
+<apex:form styleclass="borderClass" style="border:1px solid blue;">
+<apex:stylesheet value="{!URLFOR($Resource.BestPracticeCSS)}"/>
+<apex:pageBlock >
+<table>
+<tr>
+<td>
+<apex:outputLabel value="{!$Label.Comapny_Name}"/><br/>
+<apex:outputLabel value="{!$Label.Street}"/><br/>
+<apex:outputLabel value="{!$Label.City}"/><br/>
+<apex:outputLabel value="{!$Label.Phone}"/>
+</td>
+<td class="columnSpacing">
+   <h3 class="invoiceLabel"><apex:outputLabel value="{!$Label.Invoice}"/></h3>
+           <apex:dataTable value="{!Invoice_Containers__c}" var="c" id="theTable" headerClass="tableheadcolor" columnsWidth="100px, 100px">
+             <apex:column styleclass="tablehead"> 
+                 <apex:facet name="header" >Invoice #</apex:facet>
+                 <apex:outputText value="{!c.Name}"/>
+             </apex:column>
+             
+             <apex:column styleclass="tablehead"> 
+                 <apex:facet name="header">Date</apex:facet>
+                 <apex:outputText value="{!c.Date__c}"/>
+             </apex:column>
+                          
+ </apex:dataTable>
+ </td>
+ 
+ </tr>
+</table>
+<br/> <br/> <br/>
+<table>
+ <tr>
+     <td>
+         <apex:dataTable value="{!Invoice_Containers__c}" var="c" headerClass="tableheadcolor">
+             <apex:column styleclass="billToHead"> 
+                 <h1><apex:facet name="header">Bill To:</apex:facet></h1>
+                 <apex:outputText value="{!c.Name_of_contact__c}"/><br/>
+                 <apex:outputText value="{!c.Company_Name__c}"/><br/>
+                 <apex:outputText value="{!c.Street__c}"/><br/>
+                 <apex:outputText value="{!c.City__c}"/>
+                 <apex:outputText value="{!c.State__c  }"/>
+                 <apex:outputText value="{!c.ZIP__c}"/><br/>
+                 <apex:outputText value="{!c.Phone__c}"/><br/>
+                 <apex:outputText value="{!c.Email__c}"/>
+             </apex:column>
+          </apex:dataTable>
+     </td>
+ </tr>
+
+ </table>
+ <br/><br/><br/>
+ <table>
+ <tr>
+     <td>
+        <apex:dataTable value="{!keyMap}" var="k" headerClass="tableheadcolor3" columnsWidth="90%,90%">
+             <apex:column style="cellspacing:30px;" styleclass="tablehead"> 
+                 <apex:facet name="header">Description</apex:facet>
+                 <apex:outputText value="{!k}"/>
+             </apex:column>
+             <apex:column styleclass="tablehead"> 
+                 <apex:facet name="header">Amount</apex:facet>
+
+                 <apex:outputText value="{!mapExpenses[k]}"/>
+             </apex:column>
+          </apex:dataTable>
+     </td>
+ </tr>
+
+ </table>
+</apex:pageBlock>
+<apex:pageBlock >
+    <apex:outputLabel styleclass="footer" value="{!$Label.Footer}"/><br/>
+    <apex:outputLabel styleclass="footer" value="{!$Label.Footer2}"/>
+
+</apex:pageBlock>
+
+</apex:form>
+</apex:page>
