@@ -1,0 +1,61 @@
+<!--
+
+Q1. The account manager now wants the function to search for a particular account from the
+    account list page. Add a textbox to the top of the VF page that will take the account name
+    Add a button as well that will perform the search on the accounts and display the results
+    accordingly. The count of the accounts should also be updated.
+    
+    The search should also be performed on pressing the enter button on the keyboard. If nothing
+    has been entered in the textbox, a message should be displayed stating that “Input at least 3
+    characters to perform search”.
+    
+    The results of the search should be displayed without refreshing the page. Also add a link to
+    clear the search results.
+ 
+ -->
+
+
+
+<apex:page standardController="Account" recordSetVar="accounts" extensions="SearchForAccountManagerExtension">
+
+   <apex:pageMessages id="abc"></apex:pageMessages>
+
+   <apex:form >
+
+       <apex:pageBlock title="Search">
+           <apex:pageBlockSection >
+               <apex:inputText id="searchText" value="{!searchText}" onkeypress="return runOnEnter(event);"/>
+               <apex:commandButton id="sbutton" value="Search" action="{!searchRecords}" rerender="searchResult, abc"/>
+               <apex:commandLink value="Clear" action="{!clearSearch}" rerender="searchResult"/>
+           </apex:pageBlockSection>
+       </apex:pageBlock>
+
+       <apex:pageBlock id="searchResult" title="Accounts">
+       <apex:panelGrid columns="1" style="float:right;">
+           {!countOfRows} Rows Found...
+       </apex:panelGrid>
+               <apex:pageBlockTable value="{!accounts}" var="a" rendered="{!show}">
+                   <apex:column value="{!a.Name}" />
+                   <apex:column value="{!a.AccountNumber}" />
+                   <apex:column value="{!a.Phone}" />
+               </apex:pageBlockTable>
+       </apex:pageBlock>
+
+   </apex:form>
+
+   <script type='text/javascript'> 
+          function runOnEnter(ev) 
+          { 
+           if (window.event && window.event.keyCode == 13 || ev.which == 13)
+             {
+              var searchButton=document.getElementById('j_id0:j_id26:j_id27:j_id28:sbutton');
+              searchButton.click(); 
+              return false; 
+             } 
+             else 
+             { 
+               return true; 
+             } 
+          }
+   </script>
+</apex:page>
