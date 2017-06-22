@@ -24,6 +24,21 @@
 
 
 private class CheckDuplicateTestClass {
+    @testSetup
+    public static  void contactfactory()
+    {
+        List<Contact> contactList=new List<Contact>();
+        for(Integer i=1; i<=50;i++)
+        {
+            Contact contact=new Contact();
+            Contact.LastName='abc'+i;
+            Contact.Email='xyz'+i+'@gmail.com';
+            Contact.Phone='950'+i;
+            
+            contactList.add(Contact);
+        }
+        insert contactList;
+    }
     
     static testMethod void CheckDuplicatesForSingleRecord() {
         system.Test.startTest();
@@ -34,12 +49,25 @@ private class CheckDuplicateTestClass {
      }
      
      
-     static testMethod void CheckDuplicatesForForBulk() {
+     static testMethod void CheckDuplicatesForBulk() {
         system.Test.startTest();
         List<contact> contactList=ContactFactoryNew.createAndInsertContacts(100);
         system.Test.stopTest();
         List<contact> contacts=[Select Id from contact ]; 
-        system.assertEquals(contactList.size(),contacts.size());
+        system.assertEquals(150,contacts.size());
+     }
+     
+     static testMethod void CheckDuplicatesForMixBulk() {
+         List<contact> contactList=ContactFactoryNew.createRecordsInContact(100);
+         for(Integer i=0;i<100;i=i+2){
+            contactList[i].lastname =contactList[i+1].lastname;
+        }
+        contactList[0].phone ='9501';
+        system.Test.startTest();
+            Database.insert(contactList,false);
+        system.Test.stopTest();
+        List<contact> contacts=[Select Id from contact ]; 
+        system.assertEquals(99,contacts.size());
      }
      
       static testMethod void CheckDuplicatesForNullEmailSingleRecord() {
