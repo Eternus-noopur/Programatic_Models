@@ -1,0 +1,40 @@
+<!--  
+* @description: Component for the visual force page which is used to display 
+                all the user queries and their results i.e. related links.
+* @author: Noopur Naik
+*
+* @revision:
+* Version      Date            Description
+* ------------------------------------------------
+* 1.0          2-July-2017     Initial revision.
+-->
+
+<apex:component controller="PageToDisplaySearHistoryController">
+    <apex:form id="frm">
+        <apex:pageBlock id="emailContentBlock">
+            <apex:actionStatus id="status" startText="Loading..."  stopText=""/>
+            <apex:pageBlockSection id="section1" columns="1" collapsible="true" title="History Records">
+                
+                <apex:pageBlockTable value="{!emailContentList}" var="emailcontent">
+                    <apex:column value="{!emailcontent.Email_Body__c}" />
+                    <apex:column value="{!emailcontent.Email_Subject__c}"/>
+                    <apex:column width="10px">
+                        <apex:commandButton action="{!showHistory}" value="View Results" reRender="responseBlock" status="status">
+                            <apex:param name="queryid" value="{!emailcontent.id}" assignTo="{!queryId}"/>
+                        </apex:commandButton>
+                    </apex:column>
+                </apex:pageBlockTable>
+            </apex:pageBlockSection>
+                    <div align="center">
+                        <apex:commandButton action="{! previous }" value="< Previous" status="status" />
+                         &nbsp;&nbsp;  
+                        <apex:commandButton action="{! Next }" value="Next >" status="status" />
+                    </div>
+        </apex:pageBlock>
+            <apex:pageBlock id="responseBlock">
+                <apex:pageBlockTable value="{!historyList}" var="resp">
+                    <apex:column value="{!resp.Links__c}" />
+                </apex:pageBlockTable>
+        </apex:pageBlock>
+    </apex:form>
+</apex:component>
