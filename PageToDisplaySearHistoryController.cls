@@ -11,7 +11,7 @@
 
 public with sharing class PageToDisplaySearHistoryController {
     
-    public String queryForFetchingEmailContents = 'SELECT id, Email_Subject__c,Email_Body__c from Email_Handler__c';
+    public String queryForFetchingEmailContents = 'SELECT id, Email_Subject__c,Email_Body__c from Email_Handler__c limit 1000';
     public PageToDisplaySearHistoryController(ApexPages.StandardSetController controller) {}
     public list<Search_Result__c> historyList{get;set;}
     public String SearchString{get;set;} 
@@ -41,7 +41,7 @@ public with sharing class PageToDisplaySearHistoryController {
     }
     public void previous(){
         if(newSetController.getHasPrevious()){
-        newSetController.previous();
+            newSetController.previous();
         }
     }
 }
