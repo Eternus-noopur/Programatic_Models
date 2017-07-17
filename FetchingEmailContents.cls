@@ -12,24 +12,22 @@
 * 1.0          28-Jun-2017     Initial revision.
 **/
 
-
 global class FetchingEmailContents implements Messaging.InboundEmailHandler {
     global  String emailHandlerid;
     global  String contactId;
+    global  List<Contact> contacts;
     global Messaging.InboundEmailResult handleInboundEmail(Messaging.InboundEmail email, Messaging.InboundEnvelope envelope) {
     Messaging.InboundEmailResult result = new Messaging.InboundEmailresult();
-     String contactId;
+    String contactId;
     
      List<String> contactName =  email.fromname.split(' ');
      String contactEmail = envelope.fromaddress;
      String emailSubject = email.subject;
      String emailBody = email.plainTextBody;
-     
-     List<Contact> contacts = [SELECT Id
-                                 FROM Contact
-                                WHERE (FirstName = :contactName[0]
-                                  AND LastName = :contactName[1]) 
-                                  AND Email =:contactEmail];
+     if(!String.isBlank(contactEmail)){
+        contacts = [SELECT Id FROM Contact
+                             WHERE Email =:contactEmail];
+     }
       try{
             if (contacts.size() == 0)
             {
@@ -46,13 +44,9 @@ global class FetchingEmailContents implements Messaging.InboundEmailHandler {
             }
          }
         catch(DMLException e){} 
-            
-        
-        
-        
-        
+
         try{
-               if(!String.isBlank(emailBody)){
+               if(String.isNotBlank(emailBody)){
                 
                String emailBodyNew = emailBody.split('\n')[0];
                List<Email_Handler__c> emailhandler = [SELECT Id
@@ -73,27 +67,20 @@ global class FetchingEmailContents implements Messaging.InboundEmailHandler {
                     emailHandlerid = newEmailHandler.id;
                     
                 }
-                
-/*                Contact_Email_Handler_Junction__c newJunctionRecord = new Contact_Email_Handler_Junction__c();
-                newJunctionRecord.Contact_Name__c = contactId;
-                newJunctionRecord.Search_Query__c = emailHandlerid;
-                insert newJunctionRecord; */
+
             } 
             else{
-                Messaging.SingleEmailMessage mail = new Messaging.SingleEmailMessage();
+                messaging.SingleEmailMessage mail = new messaging.SingleEmailMessage();
                 String[] toAddress =new String[]{email.fromAddress};
                 mail.setToAddresses(toAddress);
-                mail.setSubject('Test subject');
+                mail.setSubject('Regarding contents of the body.');
                 mail.setplainTextBody('First line cannot be empty..');
-                Messaging.sendEmail(new Messaging.SingleEmailMessage[] { mail });
+                messaging.sendEmail(new messaging.SingleEmailMessage[] { mail });
             }
             
        }
         catch(DMLException e){}
-        
-        System.debug('+++++++++++++++++++++++++++++++++++++++'+contactId);
-        System.debug('+++++++++++++++++++++++++++++++++++++++'+emailHandlerid);
-        
+
         try{
                 Contact_Email_Handler_Junction__c newJunctionRecord = new Contact_Email_Handler_Junction__c();
                 newJunctionRecord.Contact_Name__c = contactId;
@@ -102,5 +89,5 @@ global class FetchingEmailContents implements Messaging.InboundEmailHandler {
             }
             catch(DMLException e){} 
             return result;
-}
+    }
 }
