@@ -23,6 +23,7 @@
 private class SearchKeywordTest {
    static testMethod void searchSuccessfullTest()
    {
+       system.Test.setMock(HttpCalloutMock.class, new MockHTTPResponsePlotMarkers());
        system.test.startTest();
            List<Account> accountList = AccontFactoryNew.createAndInsertAccounts(100);
            ApexPages.StandardSetController stdController = new ApexPages.StandardSetController(accountList);
@@ -35,6 +36,7 @@ private class SearchKeywordTest {
    
    static testMethod void searchFailTest()
    {
+       system.Test.setMock(HttpCalloutMock.class, new MockHTTPResponsePlotMarkers());
        system.test.startTest();
            List<Account> accountList = AccontFactoryNew.createAndInsertAccounts(100);
            ApexPages.StandardSetController stdController = new ApexPages.StandardSetController(accountList);
@@ -42,11 +44,12 @@ private class SearchKeywordTest {
            s.searchText = 'Ac';
            s.searchRecords();
        system.test.stopTest();
-       System.assertEquals(false,s.show);
+       System.assert(ApexPages.hasMessages(ApexPages.SEVERITY.ERROR));
    }
    
    static testMethod void clearTest()
    {
+       system.Test.setMock(HttpCalloutMock.class, new MockHTTPResponsePlotMarkers());
        system.test.startTest();
            List<Account> accountList = AccontFactoryNew.createAndInsertAccounts(100);
            ApexPages.StandardSetController stdController = new ApexPages.StandardSetController(accountList);
@@ -55,5 +58,17 @@ private class SearchKeywordTest {
        system.test.stopTest();
        System.assertEquals(true,s.show);
        System.assertEquals(100,s.countOfRows);
+   }
+   static testMethod void searchForUnAvailableRecord()
+   {
+       system.Test.setMock(HttpCalloutMock.class, new MockHTTPResponsePlotMarkers());
+       system.test.startTest();
+           List<Account> accountList = AccontFactoryNew.createAndInsertAccounts(100);
+           ApexPages.StandardSetController stdController = new ApexPages.StandardSetController(accountList);
+           SearchForAccountManagerExtension s=new SearchForAccountManagerExtension(stdController);
+           s.searchText = 'kkr';
+           s.searchRecords();
+       system.test.stopTest();
+       System.assertEquals(0,s.countOfRows);
    }
 }
