@@ -23,23 +23,38 @@ public with sharing class BatchForSendingResponseHandler {
         {
             for(Contact_Email_Handler_Junction__c contactEmailObj : emailhandlerobj.Contact_Email_Handler_Junctions__r)
             {      
-            message = new Messaging.SingleEmailMessage();
-            system.debug('++++++++++++++++++++++++++++++'+contactEmailObj.Contact_Name__r.Email);
-            Message.setToAddresses(new String[] {contactEmailObj.Contact_Name__r.Email});
-            Message.setWhatId(emailhandlerobj.Search_Results__r[0].id);
-            Message.setTargetObjectId(contactEmailObj.Contact_Name__c);
-            Message.setSaveAsActivity(true);
-            message.setTemplateId(templateId);
-            contactEmailObj.IsResponded__c = true;
-            contactEmailList.add(contactEmailObj);
-            Messaging.sendEmail(new Messaging.SingleEmailMessage[] {message});
-            mailList.add(Message);
-    }
+                message = new Messaging.SingleEmailMessage();
+                if(contactEmailObj.Contact_Name__r!=null)
+                {
+                    Message.setToAddresses(new String[] {contactEmailObj.Contact_Name__r.Email});
+                }
+                if(emailhandlerobj.Search_Results__r!=null)
+                {
+                    message.setWhatId(emailhandlerobj.Search_Results__r[0].id);
+                }
+                if(contactEmailObj.Contact_Name__c!=null)
+                {
+                    message.setTargetObjectId(contactEmailObj.Contact_Name__c);
+                }
+                message.setSaveAsActivity(true);
+                if(templateId!=null)
+                {
+                    message.setTemplateId(templateId);
+                }
+                contactEmailObj.IsResponded__c = true;
+                contactEmailList.add(contactEmailObj);
+                messaging.sendEmail(new messaging.SingleEmailMessage[] {message});
+                mailList.add(Message);
+            }
         }
         if(!mailList.isEmpty())
         {
-            Messaging.sendEmail(mailList);
-            update contactEmailList;
+            messaging.sendEmail(mailList);
+            try{
+                update contactEmailList;
+            }catch(DMLException e){
+                system.debug('Run time exception...');
+            }
         }
      }
 }
