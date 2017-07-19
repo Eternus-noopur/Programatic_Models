@@ -1,0 +1,14 @@
+<!--  
+* @description: Visual force page to display the history of the queries
+                or the links of the queries sent by users to search.
+* @author: Noopur Naik
+*
+* @revision:
+* Version      Date            Description
+* ------------------------------------------------
+* 1.0          1-July-2017     Initial revision.
+-->
+
+<apex:page >
+    <c:SearchEngineComponent />
+</apex:page>
