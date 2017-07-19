@@ -7,13 +7,13 @@ public with sharing class ContactAlphabeticalSearchUsingMap {
    public list<contact> showContacts{set;get;}
    public static contact con {set; get;}
    public List<Integer> charArr= new List<Integer>();
-   public  map<String,List<Contact>> mapAl{get;set;}
+   public  map<String,List<Contact>> mapAlphabetRecord{get;set;}
    public  String convertedChar;
    public  String query;
    
     public ContactAlphabeticalSearchUsingMap()
     {
-        mapAl = new map<String,List<Contact>>(); 
+        mapAlphabetRecord = new map<String,List<Contact>>(); 
         contactList=new List<Contact>([Select name,email,birthdate,mobilePhone from contact order by Name limit 1000]);
         showContacts = new  list<contact>();
         alpabetList = new List<String>();
@@ -24,23 +24,22 @@ public with sharing class ContactAlphabeticalSearchUsingMap {
             charArr.add(alphabetAsci);  
             String convertedChar = String.fromCharArray(charArr); 
             alpabetList.add(convertedChar);
-            mapAl.put(convertedChar,new List<Contact>());
+            mapAlphabetRecord.put(convertedChar,new List<Contact>());
         }
-        mapAl.put('All',new List<Contact>());
+        mapAlphabetRecord.put('All',new List<Contact>());
         alpabetList.add('All');
        
         
         for(Contact contact : contactList)
         {
-            mapAl.get('All').add(contact);  
+            mapAlphabetRecord.get('All').add(contact);  
             String start = contact.Name.substring(0,1).toUppercase();
-            mapAl.get(start).add(contact);
-            system.debug('&&&&&&&&&'+mapAl);
+            mapAlphabetRecord.get(start).add(contact);
         }
         
     }
     public void display(){
-        showContacts = MapAl.get(searchAlphabet);
+        showContacts = mapAlphabetRecord.get(searchAlphabet);
     }
  @RemoteAction
  public static void deleteContact(Id acc)
