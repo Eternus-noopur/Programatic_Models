@@ -97,4 +97,28 @@ public class EmailServiceTestClass {
          system.assertNotEquals(emailHandlerList.size(),emailHandler.size());
     }
     
+    static testMethod void checkForEmptyEmailBody()
+    {
+         Messaging.InboundEmail email = new Messaging.InboundEmail();
+         Messaging.InboundEnvelope env = new Messaging.InboundEnvelope();
+         messaging.SingleEmailMessage mail = new messaging.SingleEmailMessage();
+         system.Test.setMock(HttpCalloutMock.class, new MockHTTPResponsePlotMarkers());
+         system.Test.setMock(HttpCalloutMock.class, new MockHttpResponseGenerator());
+         String contactEmail = env.fromaddress;
+         String[] toAddress =new String[]{email.fromAddress};
+         mail.setToAddresses(toAddress);
+         email.subject = 'Search';
+         email.plainTextBody = ' ';
+         env.fromAddress ='abc1@gmail.com';
+         email.fromname = 'Contact1 Sahu1';
+         
+         system.test.startTest();
+            FetchingEmailContents fetchEmail = new FetchingEmailContents();
+            fetchEmail.handleInboundEmail(email,env);
+         system.test.stopTest();
+         
+         List<Email_Handler__c> emailHandler = [Select id,Email_Body__c from Email_Handler__c ];
+         system.assertEquals(0,emailHandler.size());
+    }
+    
 }
