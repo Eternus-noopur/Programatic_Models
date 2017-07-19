@@ -13,8 +13,10 @@ public class EmailServiceTestClass {
 
     static testMethod void checkForNewContactCreation()
     {
+        
          Messaging.InboundEmail email = new Messaging.InboundEmail();
          Messaging.InboundEnvelope env = new Messaging.InboundEnvelope();
+         system.Test.setMock(HttpCalloutMock.class, new MockHTTPResponsePlotMarkers());
          system.Test.setMock(HttpCalloutMock.class, new MockHttpResponseGenerator());
          email.subject = 'Test';
          email.plainTextBody = 'Demo';
@@ -34,9 +36,10 @@ public class EmailServiceTestClass {
     
     static testMethod void checkForExistingContactCreation()
     {
-         List<Contact> contactList = ContactFactoryNew.createAndInsertContacts(1);
+         List<Contact> contactList = UnitTestDataFactory.createRecordsInContact(1,True);
          Messaging.InboundEmail email = new Messaging.InboundEmail();
          Messaging.InboundEnvelope env = new Messaging.InboundEnvelope();
+         system.Test.setMock(HttpCalloutMock.class, new MockHTTPResponsePlotMarkers());
          system.Test.setMock(HttpCalloutMock.class, new MockHttpResponseGenerator());
          email.subject = 'Test';
          email.plainTextBody = 'Demo';
@@ -54,9 +57,10 @@ public class EmailServiceTestClass {
     
     static testMethod void checkForExistingEmailHandler()
     {
-         List<Email_Handler__c> emailHandlerList = EmailhandlerFactory.createEvents(1, True);
+         List<Email_Handler__c> emailHandlerList = UnitTestDataFactory.createEmailHandlerRecords(1, True);
          Messaging.InboundEmail email = new Messaging.InboundEmail();
          Messaging.InboundEnvelope env = new Messaging.InboundEnvelope();
+         system.Test.setMock(HttpCalloutMock.class, new MockHTTPResponsePlotMarkers());
          system.Test.setMock(HttpCalloutMock.class, new MockHttpResponseGenerator());
          email.subject = 'Search Query';
          email.plainTextBody = 'Salesforce';
@@ -74,9 +78,10 @@ public class EmailServiceTestClass {
     
     static testMethod void checkForNewEmailHandlerCreation()
     {
-         List<Email_Handler__c> emailHandlerList = EmailhandlerFactory.createEvents(1,True);
+         List<Email_Handler__c> emailHandlerList = UnitTestDataFactory.createEmailHandlerRecords(1,True);
          Messaging.InboundEmail email = new Messaging.InboundEmail();
          Messaging.InboundEnvelope env = new Messaging.InboundEnvelope();
+         system.Test.setMock(HttpCalloutMock.class, new MockHTTPResponsePlotMarkers());
          system.Test.setMock(HttpCalloutMock.class, new MockHttpResponseGenerator());
          email.subject = 'Search';
          email.plainTextBody = 'Test Query';
