@@ -1,0 +1,142 @@
+<apex:page controller="PlotMarkerOnGoogleMapsController" id="page">
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBe8DSAqXdmoXOIEEI0mkGWm4FQstFLFJw">
+    
+</script>
+<apex:includeScript value="https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js" />
+<apex:includeScript value="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.0/jquery-ui.min.js" />
+<apex:styleSheet value="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.0/themes/smoothness/jquery-ui.css" />
+<apex:pageMessages id="abc"></apex:pageMessages>
+    <apex:form id="form">
+        <apex:pageblock id="searchPagebock">
+            <apex:pageblockSection id="searchPagebockSection">
+                <apex:inputText id="autocomplete_textbox" value="{!searchText}" onKeyup="autoSuggestRelatedRecords();"/>
+                    <apex:commandButton styleClass="sbutton" value="Search" action="{!searchRecords}" rerender="searchResultAccount,searchResultContact,abc"/>
+            </apex:pageblockSection>
+       </apex:pageblock>
+    
+        <apex:pageBlock id="searchResultAccount" title="Accounts">
+            <apex:panelGrid columns="1" style="float:right;">
+            </apex:panelGrid>
+            <apex:commandButton value="Delete" onclick="deleteSelected(event);" rerender="searchpageBlockSection"/>
+            <apex:pageBlockTable id="searchpageBlockSection" value="{!accounts}" var="account" rendered="{!show}">
+                 <apex:column >
+                    <apex:facet name="header">Name</apex:facet>
+                        <apex:commandLink value="{!account.Name}" onclick="demomarkers('{!account.Id}');return false;" />
+                 </apex:column>
+                 <apex:column value="{!account.Phone}" />
+                 <apex:column headerValue="Owner Name">
+                        <apex:inputField value="{!account.ownerid}" />
+                 </apex:column>  
+                 <apex:column >
+                        <apex:inputCheckbox value="{!account.Id}" html-data-id="account_{!account.Id}" onclick="selectaccounts(event);" />
+                 </apex:column>  
+            </apex:pageBlockTable> 
+        </apex:pageBlock>
+       
+        <apex:pageBlock id="searchResultContact" title="Contacts">
+            <apex:panelGrid columns="1" style="float:right;">
+            </apex:panelGrid>
+            <apex:commandButton value="Delete" onclick="deleteSelected(event);"/>
+            <apex:pageBlockTable value="{!Contacts}" var="contact" rendered="{!show}">
+                <apex:column >
+                    <apex:facet name="header">Name</apex:facet>
+                        <apex:commandLink value="{!contact.Name}" onclick="plotMarkers('{!contact.Id}');return false;"/>
+                </apex:column>
+                <apex:column value="{!contact.Phone}" />
+                <apex:column headerValue="Owner Name">
+                    <apex:inputField value="{!contact.ownerid}" />
+                </apex:column> 
+                <apex:column >
+                        <apex:inputCheckbox value="{!contact.Id}" html-data-id="contact_{!contact.Id}" onclick="selectaccounts(event);" />
+                 </apex:column> 
+            </apex:pageBlockTable>
+        </apex:pageBlock>
+        <div id="map">Map</div> 
+    </apex:form>
+    <style>
+        #map {width:1000px; height:400px}
+    </style>
+
+    <script type='text/javascript'> 
+    var selectedAccountIds = [];
+    var map;
+    function initialize() {
+        var mapOptions = {
+                zoom: 16,
+                center: new google.maps.LatLng('12.9833','77.5833'),
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+        map = new google.maps.Map(document.getElementById('map'),
+        mapOptions);
+    }
+
+    function loadMap(lat,lng)
+    {
+        console.log('lat', lat);
+        var location= new google.maps.LatLng(lat, lng);
+        var marker = new google.maps.Marker({
+        position: location,
+        map: map
+        });
+        map.setCenter(location);
+    } 
+    google.maps.event.addDomListener(window, 'load', initialize);
+    function plotMarkers(id)
+    {
+        console.log(id);
+        var locationlist;
+        PlotMarkerOnGoogleMapsController.plotMarkerFunction(id,function(result, event){
+        console.log('@@@@@',result);
+        loadMap(result[0], result[1]);
+    });
+
+}
+    
+function selectaccounts(event){
+    selectedAccountIds.push(event.target.dataset.id.split("_")[1]);
+    console.log(selectedAccountIds);
+}
+    
+function deleteSelected(event){
+    event.preventDefault();
+     Visualforce.remoting.Manager.invokeAction('{!$RemoteAction.PlotMarkerOnGoogleMapsController.deleteRec}',selectedAccountIds, function(result, event){
+     event.preventDefault();
+    });    
+}
+function autoSuggestRelatedRecords() 
+{
+    var j$ = jQuery.noConflict();
+    var autoCompleteTextBoxId = "input[id$='autocomplete_textbox']";
+    var queryTerm;
+    j$(autoCompleteTextBoxId).autocomplete({
+        minLength: 2,
+        source: function(request, response) {
+            queryTerm = request.term;
+            var sObjects;
+            var searchText = j$(autoCompleteTextBoxId).val();
+            PlotMarkerOnGoogleMapsController.getAccountContactRecords(searchText,function(result, event){
+                if(event.type == 'exception') {
+                    alert(event.message);
+                } else {
+                console.log(result);
+                    sObjects = result;
+                    response(sObjects);
+                }
+            });
+        },
+        focus: function( event, ui ) {
+            j$(autoCompleteTextBoxId).val( ui.item.Name );
+            document.getElementById(autoCompleteTextBoxId);
+            return false;
+        },
+        select: function( event, ui ) {
+            document.getElementById('page:form:searchPagebock:searchPagebockSection:autocomplete_textbox').value= ui.item.value;
+            return false;
+        },
+    })
+}
+
+
+    </script> 
+
+</apex:page>
