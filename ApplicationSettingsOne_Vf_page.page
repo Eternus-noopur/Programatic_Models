@@ -1,13 +1,14 @@
 <apex:page controller="ApplicationSettingOneController" >
 <apex:form >
-      <apex:selectList value="{!selectedCountry}" id="category" size="1" multiselect="false">
-        <apex:selectOptions value="{!CountryList}"/>
-            <apex:actionSupport event="onchange" action="{!fetchCity}" rerender="citySelect"/>
-       </apex:selectList>
-    <apex:outputPanel id="citySelect">
-        <apex:selectList value="{!selectedCity}" size="1" multiselect="false">
-            <apex:selectOptions value="{!listSelectedCity}"/>
-       </apex:selectList>
-       </apex:outputPanel>
+    <label>Select country from country list:</label><br/><br/>
+        <apex:selectList value="{!selectedCountry}" id="category" size="1" multiselect="false">
+            <apex:selectOptions value="{!CountryList}"/>
+                <apex:actionSupport event="onchange" action="{!fetchCity}" rerender="citySelect"/>
+        </apex:selectList><br/><br/>
+     
+    <label>Related cities list:</label><br/><br/>
+            <apex:selectList value="{!selectedCity}" size="1" multiselect="false" id="citySelect">
+                <apex:selectOptions value="{!listSelectedCity}"/>
+            </apex:selectList>
 </apex:form>
 </apex:page>
