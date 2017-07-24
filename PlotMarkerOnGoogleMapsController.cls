@@ -1,7 +1,5 @@
 public with sharing class PlotMarkerOnGoogleMapsController {
     public String queryForFetchingAccountRecords = 'Select id,name from account limit 1000';
-    public list<Search_Result__c> historyList{get;set;}
-    public String SearchString{get;set;} 
     public integer pageSize = Integer.valueOf(system.label.pageSize);
     public ApexPages.StandardSetController newSetController;
     public static list<list<sObject>> searchedRecord {get;set;}
@@ -15,7 +13,7 @@ public with sharing class PlotMarkerOnGoogleMapsController {
     transient public Integer countOfRows {get; set;}
     public boolean show{get;set;}
     public static String responseBody;
-//    public Boolean allBool {get;set;}
+
     
     public PlotMarkerOnGoogleMapsController(ApexPages.StandardSetController controller) {}
     public PlotMarkerOnGoogleMapsController()
@@ -59,9 +57,24 @@ public with sharing class PlotMarkerOnGoogleMapsController {
         List<String> location = new list<String>();
         location.add(String.valueOf(account.BillingLatitude));
         location.add(String.valueOf(account.BillingLongitude));
+        
         return location;
     }
-
+    
+    @RemoteAction
+    public static List<String> plotMarkerFunctionForContact(Id contactId) {
+        Contact contact = [SELECT id
+                                , MailingLatitude   
+                                , MailingLongitude
+                             FROM contact 
+                            WHERE id =: contactId];
+        List<String> location = new list<String>();
+        location.add(String.valueOf(contact.MailingLatitude));
+        location.add(String.valueOf(contact.MailingLongitude));
+        
+        return location;
+    }
+    
     @RemoteAction
     public static list<String> getAccountContactRecords(String searchText) {
         resultSet = new list<String>();
