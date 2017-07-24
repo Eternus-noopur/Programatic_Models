@@ -14,7 +14,6 @@ public with sharing class ApplicationSettingOneController {
        List<SelectOption> options = new List<SelectOption>();
        set<String> setCountry = new set<String>();
        for(City__c c:City__c.getAll().values()){
-       System.debug(c);
            if(!setCountry.contains(c.Country__c)){
                options.add(new SelectOption(c.Country__c,c.Country__c));
                setCountry.add(c.Country__c);
@@ -25,7 +24,7 @@ public with sharing class ApplicationSettingOneController {
    public void fetchCity(){
        listSelectedCity = new List<SelectOption>();
        for(City__c c:City__c.getAll().values()){
-           if(c.Country__c == this.selectedCountry){
+           if(c.Country__c.equalsIgnoreCase( this.selectedCountry)){
                listSelectedCity.add(new SelectOption(c.Name,c.Name));
            }
        }
