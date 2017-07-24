@@ -40,7 +40,7 @@
             <apex:pageBlockTable value="{!Contacts}" var="contact" rendered="{!show}">
                 <apex:column >
                     <apex:facet name="header">Name</apex:facet>
-                        <apex:commandLink value="{!contact.Name}" onclick="plotMarkers('{!contact.Id}');return false;"/>
+                        <apex:commandLink value="{!contact.Name}" onclick="plotMarkersForContact('{!contact.Id}');return false;"/>
                 </apex:column>
                 <apex:column value="{!contact.Phone}" />
                 <apex:column headerValue="Owner Name">
@@ -86,6 +86,16 @@
         console.log(id);
         var locationlist;
         PlotMarkerOnGoogleMapsController.plotMarkerFunction(id,function(result, event){
+            console.log('@@@@@',result);
+            loadMap(result[0], result[1]);
+        });
+    }
+    
+    function plotMarkersForContact(id)
+    {
+        console.log(id);
+        var locationlist;
+        PlotMarkerOnGoogleMapsController.plotMarkerFunctionForContact(id,function(result, event){
             console.log('@@@@@',result);
             loadMap(result[0], result[1]);
         });
