@@ -17,21 +17,31 @@ public  class StudentRegistrationController {
             languageCode = LanguageCustomSetting__c.getAll().values()[0].Code__c;
         }
     }
-   public void selectChange()
-   {
-    for(LanguageCustomSetting__c setting : LanguageCustomSetting__c.getAll().values())
+    public void selectChange()
     {
-                   if(setting.Name==selectedLang)
-           {
-               languageCode = setting.Code__c;
-           }
-       }
+        for(LanguageCustomSetting__c setting : LanguageCustomSetting__c.getAll().values())
+        {
+            if(setting.Name==selectedLang)
+            {
+                languageCode = setting.Code__c;
+            }
+        }
    }
-    public pageReference saveMethod()
-    {
-        insert student;
-        ApexPages.addmessage(new ApexPages.message(ApexPages.severity.INFO,System.Label.SuccessMessage));
-         
+   public pageReference saveMethod()
+   {
+        if(String.isNotBlank(student.City__c) && String.isNotBlank(student.Country__c) && String.isNotBlank(student.Course_Applying_For__c) && String.isNotBlank(student.Gender__c) &&  String.isNotBlank(student.State__c) &&  (student.Roll_Number__c!=null) && (student.SSC__c!=null)  && (student.HSC__c!=null) )
+        {
+            try
+            {
+                insert student;
+                ApexPages.addmessage(new ApexPages.message(ApexPages.severity.INFO,System.Label.SuccessMessage));
+            }
+            catch(DMLException e){
+            
+            }
+        }
+        else
+            ApexPages.addmessage(new ApexPages.message(ApexPages.severity.INFO,System.Label.EmptyFormMessage));
         return null; 
     }
 }
