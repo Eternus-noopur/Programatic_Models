@@ -14,8 +14,11 @@ Q1. ABC Containers require the ability to automatically associate a Contact crea
 -------------------------------------------------------------------------------------------------------------*/
 
 trigger AssociatingDomainOfAcountWithContact on Contact (before insert, before update) {
-    TriggerSetting__c triggerSttingInstance = TriggerSetting__c.getInstance();
-    if(triggerSttingInstance.ContactObject__c){
-        AssociatingAccountWithContactHandler.ContactAccontAssociation(trigger.new);  
+    
+    TriggerCustomSetting__c triggerCustomSettingobj = TriggerCustomSetting__c.getInstance('AssociatingContactAccount');
+    if(triggerCustomSettingobj != NULL && 'False'.equalsIgnorecase(String.valueOf(triggerCustomSettingobj.IsEnable__c))){ 
+        return;
     }
+    
+    AssociatingAccountWithContactHandler.ContactAccontAssociation(trigger.new);  
 }
