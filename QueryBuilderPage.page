@@ -1,13 +1,13 @@
 <apex:page controller="QueryBuilderController">
 <apex:pageMessages id="pageMsg"></apex:pageMessages>
-    <apex:form id="od">
+    <apex:form id="formId">
         <apex:pageBlock >
             <apex:pageBlockSection >
                 <apex:pageBlockSectionItem >
                     <apex:outputLabel value="Select Object"/>
                     <apex:selectList size="1" value="{!selectedObj}">  
                         <apex:selectOptions value="{!objects}"/>  
-                            <apex:actionSupport event="onchange" action="{!details}" reRender="od,pageMsg"/> 
+                            <apex:actionSupport event="onchange" action="{!details}" reRender="formId,pageMsg"/> 
                     </apex:selectList>
                 </apex:pageBlockSectionItem>
             </apex:pageBlockSection>
@@ -16,14 +16,14 @@
                     <apex:outputLabel value="Select Fields"/>
                     <apex:panelGrid columns="3">
                         <apex:panelGroup style="width:40%">
-                            <apex:selectList value="{!sfields}" multiselect="true" style="width:120px;height:120px;">
-                                <apex:selectOptions value="{!fnsoptions}"/>
+                            <apex:selectList value="{!selectfields}" multiselect="true" style="width:120px;height:120px;">
+                                <apex:selectOptions value="{!feildOptions}"/>
                             </apex:selectList>
                         </apex:panelGroup>
                         <apex:panelGroup style="width:20%;height:120px;">
                             <table height="120px">
-                                <tr><td><apex:commandButton value="Add" action="{! addFields}" style="width:80px;" reRender="od,pageMsg"/></td></tr>
-                                <tr><td><apex:commandButton value="Remove" action="{! removeFields}" style="width:80px;" reRender="od,pageMsg"/></td></tr>
+                                <tr><td><apex:commandButton value="Add" action="{! addFields}" style="width:80px;" reRender="formId,pageMsg"/></td></tr>
+                                <tr><td><apex:commandButton value="Remove" action="{! removeFields}" style="width:80px;" reRender="formId,pageMsg"/></td></tr>
                             </table>
                         </apex:panelGroup>
                         <apex:panelGroup >
@@ -55,7 +55,7 @@
             <apex:pageBlockSection rendered="{!isObjSelected}">
                 <p>
                 <apex:pageBlockSectionItem >
-                    <apex:commandButton value="Execute" action="{!queryData}" reRender="od,pageMsg" style="width:80px;"/>
+                    <apex:commandButton value="Execute" action="{!queryData}" reRender="formId,pageMsg" style="width:80px;"/>
                 </apex:pageBlockSectionItem>
                 </p>
             </apex:pageBlockSection>
@@ -69,8 +69,8 @@
             </apex:pageBlockSection>
             <apex:pageBlockSection rendered="{!isQueryExecuted}">
                 <apex:pageBlockSectionItem >
-                   <apex:pageBlockTable value="{!mydata}" var="objData">
-                       <apex:repeat value="{!myFields}" var="fieldName">
+                   <apex:pageBlockTable value="{!dataFromQuery}" var="objData">
+                       <apex:repeat value="{!fieldsTobeRetrieved}" var="fieldName">
                            <apex:column value="{!objData[fieldName]}"/>
                        </apex:repeat>
                    </apex:pageBlockTable>
