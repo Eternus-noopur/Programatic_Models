@@ -27,8 +27,8 @@
                             </table>
                         </apex:panelGroup>
                         <apex:panelGroup >
-                            <apex:selectList value="{!rfields}" multiselect="true" style="width:120px;height:120px;">
-                                <apex:selectOptions value="{!fsoptions}"/>
+                            <apex:selectList value="{!selectedfields}" multiselect="true" style="width:120px;height:120px;">
+                                <apex:selectOptions value="{!selectedfieldOptions}"/>
                             </apex:selectList>
                         </apex:panelGroup>
                     </apex:panelGrid>
