@@ -1,11 +1,10 @@
 global class SoapServiceForManupulatingLeads {
-    
     global class Response{
         webservice boolean isSuccess;
-        webservice Id LeadId;
-        webservice String Status;
+        webservice Id leadId;
+        webservice String status;
     }
-    
+
     webservice static Response createLead(String firstName, String lastName,String email, String phone, String Company)
     {
         try
@@ -18,18 +17,18 @@ global class SoapServiceForManupulatingLeads {
             Company=company);
 
             insert newLead;
-            Response res = new Response();
-            res.isSuccess = True;
-            res.LeadId = newLead.Id;
-            res.Status = 'Success';
-            return res;
+            Response response = new Response();
+            response.isSuccess = True;
+            response.leadId = newLead.Id;
+            response.status = 'Success';
+            return response;
          }
          catch(DMLException e)
          {
-            Response res = new Response();
-            res.isSuccess = False;
-            res.Status = 'Failure';
-            return res;
+            Response response = new Response();
+            response.isSuccess = False;
+            response.status = 'Failure';
+            return response;
          }
     }
      
@@ -41,17 +40,17 @@ global class SoapServiceForManupulatingLeads {
                                   Email=: email AND Phone =: phone];
          
             delete newlead[0];
-            Response res = new Response();
-            res.isSuccess = True;
-            res.LeadId = newLead[0].Id;
-            res.Status = 'Succes';
-            return res;
+            Response response = new Response();
+            response.isSuccess = True;
+            response.leadId = newLead[0].Id;
+            response.status = 'Succes';
+            return response;
          }
          catch(DMLException e){
-             Response res = new Response();
-             res.isSuccess = False;
-             res.Status = 'Failure';
-             return res;
+             Response response = new Response();
+             response.isSuccess = False;
+             response.status = 'Failure';
+             return response;
           }
     }
      
@@ -63,18 +62,18 @@ global class SoapServiceForManupulatingLeads {
             updatelead[0].Email=email;
             updatelead[0].Phone=phone;
             update updatelead[0];
-            Response res = new Response();
-            res.isSuccess = True;
-            res.LeadId = updatelead[0].Id;
-            res.Status = 'Succes';
-            return res;
+            Response response = new Response();
+            response.isSuccess = True;
+            response.leadId = updatelead[0].Id;
+            response.status = 'Succes';
+            return response;
          }
          catch(DMLException e)
          {
-            Response res = new Response();
-            res.isSuccess = False;
-            res.Status = 'Failure';
-            return res;
+            Response response = new Response();
+            response.isSuccess = False;
+            response.status = 'Failure';
+            return response;
          }   
      }
 }
