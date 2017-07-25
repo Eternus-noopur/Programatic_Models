@@ -22,15 +22,8 @@
 @isTest
 private class ApplicationSettingSecondTestClass {
 
-    @testSetup
-    
-    public static void createDataFactory() {
-        LanguageCustomSetting__c languageObj = new LanguageCustomSetting__c();
-        languageObj.Name = 'English';
-        languageObj.Code__c = 'en_US';
-        insert languageObj;
-    }
     static testMethod void checkForLanguageCode() {
+        UnitTestDataFactory.dataForLanguageCustomSetting();
         system.test.startTest();
             Student__c studentObj = new Student__c();
             ApexPages.StandardController controller = new ApexPages.StandardController(studentObj);
@@ -40,17 +33,31 @@ private class ApplicationSettingSecondTestClass {
             system.assertEquals('en_US',studentRegistrationObject.languageCode);
         system.test.stopTest();
     }
-    static testMethod void checkForPageMessages() {
+    static testMethod void checkEmptyFormPageMessage() {
+        UnitTestDataFactory.dataForLanguageCustomSetting();
         system.test.startTest();
             Student__c studentObj = new Student__c(Name='Test',City__c='Shimla',Country__c='India',
                                                     Gender__c='Female');
             ApexPages.StandardController controller = new ApexPages.StandardController(studentObj);
             StudentRegistrationController studentRegistrationObject = new StudentRegistrationController(controller);
             studentRegistrationObject.saveMethod();
-           
             List<ApexPages.message> message = ApexPages.getMessages();
-            String successMsg=message[0].getDetail();
-            system.assertEquals('Your admission application has been submitted successfully',successMsg);
+            String EmptyFormMessage=message[0].getDetail();
+            system.assertEquals('Form fields cannot be empty......',EmptyFormMessage);
+        system.test.stopTest();
+    }
+    
+    static testMethod void checkSuccessPageMessage() {
+        UnitTestDataFactory.dataForLanguageCustomSetting();
+        system.test.startTest();
+            Student__c studentObj = new Student__c(Name='Test',City__c='Shimla',Country__c='India',Course_Applying_For__c='BE',
+                                                   State__c='Bihar',Gender__c='Female',HSC__c = 89.8, SSC__c = 82 ,Roll_Number__c = 12871);
+            ApexPages.StandardController controller = new ApexPages.StandardController(studentObj);
+            StudentRegistrationController studentRegistrationObject = new StudentRegistrationController(controller);
+            studentRegistrationObject.saveMethod();
+            List<ApexPages.message> message = ApexPages.getMessages();
+            String SuccessMessage=message[0].getDetail();
+            system.assertEquals('Your admission application has been submitted successfully',SuccessMessage);
         system.test.stopTest();
     }
 }
