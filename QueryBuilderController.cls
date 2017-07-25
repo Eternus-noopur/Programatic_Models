@@ -1,6 +1,6 @@
 public class QueryBuilderController {
     public List<SelectOption> objects {set;get;}
-    public List<SelectOption> fsoptions{set;get;}
+    public List<SelectOption> selectedfieldOptions{set;get;}
     public List<SelectOption> feildOptions{set;get;}
     public String selectedObj {set;get;}
     public List<String> objlst {set;get;}
@@ -8,11 +8,11 @@ public class QueryBuilderController {
     public Set<String> fselected{set;get;}
     public List<String> fieldsTobeRetrieved{set;get;}
     public Set<string> fnotselected{set;get;}
-    public Map<String, Schema.SObjectField> mfields{set;get;}
-    public Map<String, Schema.SObjectType> mobjects{set;get;}
+    public Map<String, Schema.SObjectField> sObjectFields{set;get;}
+    public Map<String, Schema.SObjectType> sobjectType{set;get;}
     public String objDescription {set;get;}
     public List<String> selectfields{set;get;}
-    public List<String> rfields{set;get;}
+    public List<String> selectedfields{set;get;}
     public String query{set;get;}
     public List<SObject> dataFromQuery{set;get;}
     public Boolean isObjSelected{set;get;}
@@ -33,15 +33,15 @@ public class QueryBuilderController {
         objlst = new List<String>();
         dataFromQuery = new List<SObject>();
         selectfields = new List<String>();
-        rfields = new List<String>();
+        selectedfields = new List<String>();
         fields = new List<String>();
         fselected = new Set<String>();
         fnotselected = new Set<String>();
-        fsoptions = new List<SelectOption>();
+        selectedfieldOptions = new List<SelectOption>();
         feildOptions = new List<SelectOption>();
         
-        mobjects = Schema.getGlobalDescribe();
-        for(Schema.SObjectType objToken : mobjects.values())
+        sobjectType = Schema.getGlobalDescribe();
+        for(Schema.SObjectType objToken : sobjectType.values())
         {
             Schema.DescribeSObjectResult objDescribe = objToken.getDescribe();
             if (objDescribe.isAccessible() && objDescribe.isQueryable()){
@@ -74,11 +74,11 @@ public class QueryBuilderController {
         query = '';
         if(selectedObj != 'None')
         {
-            Schema.DescribeSObjectResult myObj = mobjects.get(selectedObj).getDescribe();
+            Schema.DescribeSObjectResult myObj = sobjectType.get(selectedObj).getDescribe();
             objDescription = ' '+myObj;
-            mfields = mobjects.get(selectedObj).getDescribe().fields.getMap();
+            sObjectFields = sobjectType.get(selectedObj).getDescribe().fields.getMap();
             fields.clear();
-            for(Schema.SObjectField fieldToken : mfields.values())
+            for(Schema.SObjectField fieldToken : sObjectFields.values())
             {
                 Schema.DescribeFieldResult fieldDescribe = fieldToken.getDescribe();
                 if(fieldDescribe.isAccessible())
@@ -102,7 +102,7 @@ public class QueryBuilderController {
     public void show()
     {
         feildOptions.clear();
-        fsoptions.clear();
+        selectedfieldOptions.clear();
         System.debug('Inside Show ::: fnotselected:::'+fnotselected);
         System.debug('Inside Show ::: fnsoptions:::'+feildOptions);
         for(String s : fnotselected)
@@ -114,7 +114,7 @@ public class QueryBuilderController {
         for(String s : fselected)
         {
             SelectOption op = new SelectOption(s,s);
-            fsoptions.add(op);
+            selectedfieldOptions.add(op);
         }
     }
     
@@ -125,10 +125,10 @@ public class QueryBuilderController {
     }
 
     public void removeFields(){
-        System.debug('Rfields:::'+rfields);
-        fnotselected.addAll(rfields);
+        System.debug('Rfields:::'+selectedfields);
+        fnotselected.addAll(selectedfields);
         System.debug('fnotselected:::'+fnotselected);
-        fselected.removeAll(rfields);
+        fselected.removeAll(selectedfields);
         show();
     }
     
