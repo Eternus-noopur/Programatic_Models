@@ -21,38 +21,25 @@
  */
 @isTest
 private class ApplicationSettingOneTestClass {
-    @testSetup
-    
-    public static void createDataFactory() {
-        list<City__c> cityList = new list <City__c>();
-        for(integer index = 1; index <= 4; index++) {
-            City__c record = new city__c();
-            record.Name = 'Pune'+index;
-            record.Country__c = 'India';
-            cityList.add(record);
-        }
-        for(integer index = 1; index <= 3; index++) {
-            City__c record = new city__c();
-           record.Name = 'Newyork'+index;
-           record.Country__c = 'USA';
-           cityList.add(record);
-       }
 
-       insert cityList;
-   }
+    static testMethod void checkFortotalCountryList() {
+        List<City__c> cityLst = UnitTestDataFactory.createRecordsInCityCustomSetting(4,True);
+        system.test.startTest();
+            ApplicationSettingOneController cityCountryObj = new ApplicationSettingOneController();
+            cityCountryObj.selectedCountry = 'India';
+            cityCountryObj.getCountryList();
+        system.test.stopTest();
+        system.assertEquals(Integer.ValueOf(System.label.noOfCountries),cityCountryObj.setCountry.size());   
+    }
+
     static testMethod void cityCountryDependenciesUnitTest() {
+        List<City__c> cityLst = UnitTestDataFactory.createRecordsInCityCustomSetting(4,True);
         system.test.startTest();
             ApplicationSettingOneController cityCountryObj = new ApplicationSettingOneController();
             cityCountryObj.selectedCountry = 'India';
             cityCountryObj.getCountryList();
             cityCountryObj.fetchCity();
-            system.assertEquals(4,cityCountryObj.listSelectedCity.size());
-
-            cityCountryObj.selectedCountry = 'USA';
-            cityCountryObj.getCountryList();
-            cityCountryObj.fetchCity();
-            system.assertEquals(3,cityCountryObj.listSelectedCity.size());
-            
         system.test.stopTest();
+        system.assertEquals(cityLst.size(),cityCountryObj.listSelectedCity.size());   
     }
 }
