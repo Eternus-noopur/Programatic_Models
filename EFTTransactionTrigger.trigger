@@ -29,8 +29,11 @@ Q5. Address Did Not Verify – AVS:
 ----------------------------------------------------------------------------------------------------------------*/
 
 trigger EFTTransactionTrigger on EFT_Transaction__c (after insert,after update) {
-    TriggerSetting__c triggerSettingInstance =  TriggerSetting__c.getInstance();
-    if(triggerSettingInstance.EFTTransactionObject__c){
-        HandlarEFTTransaction.EFTTransactionMethod(trigger.new);
+    
+    TriggerCustomSetting__c triggerCustomSettingobj = TriggerCustomSetting__c.getInstance(' CaseGeneratingTrigger');
+    if(triggerCustomSettingobj != NULL && 'False'.equalsIgnorecase(String.valueOf(triggerCustomSettingobj.IsEnable__c))){ 
+        return;
     }
+    
+    HandlarEFTTransaction.EFTTransactionMethod(trigger.new);
 }
