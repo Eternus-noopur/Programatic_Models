@@ -5,10 +5,10 @@ global with sharing class RestServiceForManupulatingLeads {
     
     global static void createLead(String firstName, String lastName,String email, String phone, String Company)
     {
-        RestRequest req = RestContext.request;
-        RestResponse res = RestContext.response;
-        try{
-            system.debug('++++++++++++++++++');
+        RestRequest request = RestContext.request;
+        RestResponse response = RestContext.response;
+        try
+        {
             Lead newLead = new Lead(
             FirstName=firstName,
             LastName=lastName,
@@ -17,15 +17,15 @@ global with sharing class RestServiceForManupulatingLeads {
             Company=company);
             insert newLead;
             if(newLead.Id!= null){
-                res.addHeader('Content-Type', 'application/json');
+                response.addHeader('Content-Type', 'application/json');
                 String jsonResponse = '{"response": {"isSuccess": "True", "Lead":"' +newLead.id+'","Status":"Success" }}';
-                res.responseBody = blob.valueOf(jsonResponse);
+                response.responseBody = blob.valueOf(jsonResponse);
             }
         }
         catch(DMLException e){
-                res.addHeader('Content-Type', 'application/json');
+                response.addHeader('Content-Type', 'application/json');
                 String jsonResponse = '{"response": {"isSuccess": "False","Status":"Failure" }}';
-                res.responseBody = blob.valueOf(jsonResponse);
+                response.responseBody = blob.valueOf(jsonResponse);
         }
     }
      
@@ -33,12 +33,12 @@ global with sharing class RestServiceForManupulatingLeads {
  
     global static void deleteLeadRecord()
     {
-        RestRequest req = RestContext.request;
-        RestResponse res = RestContext.response;
-        String firstName = req.params.get('FirstName');
-        String lastName = req.params.get('LastName');
-        String email = req.params.get('Email');
-        String phone = req.params.get('Phone');
+        RestRequest request = RestContext.request;
+        RestResponse response = RestContext.response;
+        String firstName = request.params.get('FirstName');
+        String lastName = request.params.get('LastName');
+        String email = request.params.get('Email');
+        String phone = request.params.get('Phone');
         try
         {
             List<Lead> newLead = [Select FirstName,LastName,Email,Phone from Lead where FirstName=:firstName AND LastName=:lastName AND 
@@ -47,37 +47,36 @@ global with sharing class RestServiceForManupulatingLeads {
         }
         catch(DMLException e)
         {
-            res.addHeader('Content-Type', 'application/json');
+            response.addHeader('Content-Type', 'application/json');
             String jsonResponse = '{"response": {"isSuccess": "False","Status":"Failure" }}';
-            res.responseBody = blob.valueOf(jsonResponse);
+            response.responseBody = blob.valueOf(jsonResponse);
         }
-        res.addHeader('Content-Type', 'application/json');
+        response.addHeader('Content-Type', 'application/json');
         String jsonResponse = '{"response": {"isSuccess": "True", "Lead":"' +firstname+Lastname+'","Status":"Success" }}';
-        res.responseBody = blob.valueOf(jsonResponse);
+        response.responseBody = blob.valueOf(jsonResponse);
     }
      
     @HttpPatch
      
     global static void updateLead(String firstName, String lastName,String email, String phone, String Company)
     {
-        RestRequest req = RestContext.request;
-        RestResponse res = RestContext.response;
+        RestRequest request = RestContext.request;
+        RestResponse response = RestContext.response;
         try
         {
             List<Lead> updatelead=[Select FirstName,LastName,Email,Phone from Lead where FirstName=:firstName AND LastName=:lastName];
             updatelead[0].Email=email;
             updatelead[0].Phone=phone;
             update updatelead[0];
-            res.addHeader('Content-Type', 'application/json');
+            response.addHeader('Content-Type', 'application/json');
             String jsonResponse = '{"response": {"isSuccess": "True", "Lead":"' +updatelead[0].id+'","Status":"Success" }}';
-            res.responseBody = blob.valueOf(jsonResponse);
+            response.responseBody = blob.valueOf(jsonResponse);
          }
          catch(DMLException e)
          {
-            res.addHeader('Content-Type', 'application/json');
+            response.addHeader('Content-Type', 'application/json');
             String jsonResponse = '{"response": {"isSuccess": "False","Status":"Failure" }}';
-            res.responseBody = blob.valueOf(jsonResponse);
+            response.responseBody = blob.valueOf(jsonResponse);
          }   
-      
     }
 }
