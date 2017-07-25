@@ -1,21 +1,20 @@
 public class QueryBuilderController {
-    
     public List<SelectOption> objects {set;get;}
     public List<SelectOption> fsoptions{set;get;}
-    public List<SelectOption> fnsoptions{set;get;}
+    public List<SelectOption> feildOptions{set;get;}
     public String selectedObj {set;get;}
     public List<String> objlst {set;get;}
     public List<String> fields{set;get;}
     public Set<String> fselected{set;get;}
-    public List<String> myFields{set;get;}
+    public List<String> fieldsTobeRetrieved{set;get;}
     public Set<string> fnotselected{set;get;}
     public Map<String, Schema.SObjectField> mfields{set;get;}
     public Map<String, Schema.SObjectType> mobjects{set;get;}
     public String objDescription {set;get;}
-    public List<String> sfields{set;get;}
+    public List<String> selectfields{set;get;}
     public List<String> rfields{set;get;}
     public String query{set;get;}
-    public List<SObject> mydata{set;get;}
+    public List<SObject> dataFromQuery{set;get;}
     public Boolean isObjSelected{set;get;}
     public Boolean isQueryExecuted{set;get;}
     public List<SelectOption> limitOptions {set;get;}
@@ -23,23 +22,23 @@ public class QueryBuilderController {
     public String selectedOrder{set;get;}
     public List<SelectOption> orderOptions{set;get;}
 
-    public QueryBuilderController() //Constructor
+    public QueryBuilderController() 
     {
         isObjSelected = false;
         isQueryExecuted = false;
         limitOptions = new List<SelectOption>();
         orderOptions = new List<SelectOption>();
         objects = new List<SelectOption>();
-        myFields = new List<String>();
+        fieldsTobeRetrieved = new List<String>();
         objlst = new List<String>();
-        mydata = new List<SObject>();
-        sfields = new List<String>();
+        dataFromQuery = new List<SObject>();
+        selectfields = new List<String>();
         rfields = new List<String>();
         fields = new List<String>();
         fselected = new Set<String>();
         fnotselected = new Set<String>();
         fsoptions = new List<SelectOption>();
-        fnsoptions = new List<SelectOption>();
+        feildOptions = new List<SelectOption>();
         
         mobjects = Schema.getGlobalDescribe();
         for(Schema.SObjectType objToken : mobjects.values())
@@ -102,16 +101,16 @@ public class QueryBuilderController {
     
     public void show()
     {
-        fnsoptions.clear();
+        feildOptions.clear();
         fsoptions.clear();
         System.debug('Inside Show ::: fnotselected:::'+fnotselected);
-        System.debug('Inside Show ::: fnsoptions:::'+fnsoptions);
+        System.debug('Inside Show ::: fnsoptions:::'+feildOptions);
         for(String s : fnotselected)
         {
             SelectOption op = new SelectOption(s,s);
-            fnsoptions.add(op);
+            feildOptions.add(op);
         }
-        System.debug('After Show ::: fnsoptions:::'+fnsoptions);
+        System.debug('After Show ::: fnsoptions:::'+feildOptions);
         for(String s : fselected)
         {
             SelectOption op = new SelectOption(s,s);
@@ -120,13 +119,12 @@ public class QueryBuilderController {
     }
     
   public void addFields(){
-        fnotselected.removeAll(sfields);
-        fselected.addAll(sfields);
+        fnotselected.removeAll(selectfields);
+        fselected.addAll(selectfields);
         show();
     }
 
     public void removeFields(){
-        //System.debug('fnotselected:::'+fnotselected);
         System.debug('Rfields:::'+rfields);
         fnotselected.addAll(rfields);
         System.debug('fnotselected:::'+fnotselected);
@@ -135,16 +133,16 @@ public class QueryBuilderController {
     }
     
 public void queryData(){
-        myFields.clear();
-        myFields.addAll(fselected);
+        fieldsTobeRetrieved.clear();
+        fieldsTobeRetrieved.addAll(fselected);
         query = 'SELECT ';
-        query += String.join(myFields, ',');
+        query += String.join(fieldsTobeRetrieved, ',');
         query += ' FROM '+ selectedObj +' ORDER BY Id '+selectedOrder+' LIMIT '+ selectedLimit;
-        if(myFields.size()>=1)
+        if(fieldsTobeRetrieved.size()>=1)
         {
             try{
-                mydata = Database.query(query);
-                if(mydata.size()<1){
+                dataFromQuery = Database.query(query);
+                if(dataFromQuery.size()<1){
                     ApexPages.addmessage(new ApexPages.message(ApexPages.severity.ERROR,'No records to show for query'));
                 }
                 isQueryExecuted = true;
@@ -158,6 +156,6 @@ public void queryData(){
             ApexPages.addmessage(new ApexPages.message(ApexPages.severity.ERROR,'Please select few fields to query'));
         }
         System.debug('query is:::'+query);
-        System.debug('Data is:::'+mydata);
+        System.debug('Data is:::'+dataFromQuery);
     }
 }
