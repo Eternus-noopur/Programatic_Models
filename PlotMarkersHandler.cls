@@ -13,7 +13,7 @@ public with sharing class PlotMarkersHandler {
         String searchQuery;
         List<String> listofLinks;
         String googleMapEndPointUrl ='https://maps.googleapis.com/maps/api/geocode/json?sensor=false&address=';
-        if(String.valueOf(newRecordId[0]).substring(0,3) == '001')
+        if(String.valueOf(newRecordId[0].getSObjectType()).equalsIgnoreCase(String.valueOf(Account.sObjectType)))
         {
              parametersList = [Select id, Name ,BillingAddress ,BillingLatitude,BillingLongitude from Account where id in : newRecordId];
         }
@@ -23,17 +23,16 @@ public with sharing class PlotMarkersHandler {
         }
                                            
         for(sObject sObjectObj : parametersList ){   
-             Address addr;
-           
-            if(String.valueOf(sObjectObj.id).substring(0,3) == '001')
+            Address addr;
+            if(String.valueOf(newRecordId[0].getSObjectType()).equalsIgnoreCase(String.valueOf(Account.sObjectType)))
             {     
                 Account convertedAccount = (Account)sObjectObj;
                 addr = convertedAccount.BillingAddress;
             }
             else
             {
-                 Contact convertedContact = (Contact)sObjectObj;
-                 addr = convertedContact.MailingAddress;
+                Contact convertedContact = (Contact)sObjectObj;
+                addr = convertedContact.MailingAddress;
             }
             String query = addr.getStreet()+','+addr.getCity()+','+addr.getState();
             query = String.join(query.split(' '),'+');
