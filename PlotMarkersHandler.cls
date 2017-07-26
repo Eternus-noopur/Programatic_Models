@@ -23,17 +23,7 @@ public with sharing class PlotMarkersHandler {
         }
                                            
         for(sObject sObjectObj : parametersList ){   
-            Address addr;
-            if(String.valueOf(newRecordId[0].getSObjectType()).equalsIgnoreCase(String.valueOf(Account.sObjectType)))
-            {     
-                Account convertedAccount = (Account)sObjectObj;
-                addr = convertedAccount.BillingAddress;
-            }
-            else
-            {
-                Contact convertedContact = (Contact)sObjectObj;
-                addr = convertedContact.MailingAddress;
-            }
+            Address addr = String.valueOf(newRecordId[0].getSObjectType()).equalsIgnoreCase(String.valueOf(Account.sObjectType))? (Address)sObjectObj.get('BillingAddress'): (Address)sObjectObj.get('MailingAddress');    
             String query = addr.getStreet()+','+addr.getCity()+','+addr.getState();
             query = String.join(query.split(' '),'+');
             query = String.join(query.split('\n'),'+');
