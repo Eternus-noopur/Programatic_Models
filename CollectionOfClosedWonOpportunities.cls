@@ -3,7 +3,6 @@ global class CollectionOfClosedWonOpportunities implements Database.Batchable<sO
    global Map<Id,Double> aggregateAmountOnAccount = new Map<Id,Double>();
 
    global Database.QueryLocator start (Database.BatchableContext bc) {
-
                return Database.getQueryLocator('SELECT Id, (SELECT Name, Amount'+
                                                ' FROM Opportunities WHERE StageName=\'Closed Won\''+
                                                ' AND CloseDate=today), (SELECT Contact.Email'+
@@ -16,7 +15,6 @@ global class CollectionOfClosedWonOpportunities implements Database.Batchable<sO
    }
 
    global void execute(Database.BatchableContext bc, List<Account> accounts) {
-
        Double total;
        for(Account account : accounts) {
            total = 0.0;
@@ -34,7 +32,7 @@ global class CollectionOfClosedWonOpportunities implements Database.Batchable<sO
 
    global void finish(Database.BatchableContext bc) {
        Boolean isMailIdNull = false;
-String mailBody='';
+       String mailBody='';
        String[] mailAddress=new String[]{};
        List<Messaging.SingleEmailMessage> listMail = new List<Messaging.SingleEmailMessage>();
        for(String Id : mapContactOpportunity.keySet()) {
