@@ -1,5 +1,5 @@
 global class CollectionOfClosedWonOpportunities implements Database.Batchable<sObject> , Database.Stateful {
-    global Map<Id,Map<String,List<Opportunity>>> mapContactOpportunity =new Map<Id,Map<String,List<Opportunity>>>();
+   global Map<Id,Map<String,List<Opportunity>>> mapContactOpportunity =new Map<Id,Map<String,List<Opportunity>>>();
    global Map<Id,Double> aggregateAmountOnAccount = new Map<Id,Double>();
 
    global Database.QueryLocator start (Database.BatchableContext bc) {
