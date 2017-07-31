@@ -27,11 +27,11 @@ private class SearchKeywordTest {
        system.test.startTest();
            List<Account> accountList = AccontFactoryNew.createAndInsertAccounts(100);
            ApexPages.StandardSetController stdController = new ApexPages.StandardSetController(accountList);
-           SearchForAccountManagerExtension s=new SearchForAccountManagerExtension(stdController);
-           s.searchText = 'Acc';
-           s.searchRecords();
+           SearchForAccountManagerExtension searchControllerObj=new SearchForAccountManagerExtension(stdController);
+           searchControllerObj.searchText = 'Acc';
+           searchControllerObj.searchRecords();
        system.test.stopTest();
-       System.assertEquals(accountList.size(),s.countOfRows);
+       System.assertEquals(accountList.size(),searchControllerObj.countOfRows);
    }
    
    static testMethod void searchFailTest()
@@ -40,9 +40,9 @@ private class SearchKeywordTest {
        system.test.startTest();
            List<Account> accountList = AccontFactoryNew.createAndInsertAccounts(100);
            ApexPages.StandardSetController stdController = new ApexPages.StandardSetController(accountList);
-           SearchForAccountManagerExtension s=new SearchForAccountManagerExtension(stdController);
-           s.searchText = 'Ac';
-           s.searchRecords();
+           SearchForAccountManagerExtension searchControllerObj=new SearchForAccountManagerExtension(stdController);
+           searchControllerObj.searchText = 'Ac';
+           searchControllerObj.searchRecords();
        system.test.stopTest();
        System.assert(ApexPages.hasMessages(ApexPages.SEVERITY.ERROR));
    }
@@ -53,11 +53,11 @@ private class SearchKeywordTest {
        system.test.startTest();
            List<Account> accountList = AccontFactoryNew.createAndInsertAccounts(100);
            ApexPages.StandardSetController stdController = new ApexPages.StandardSetController(accountList);
-           SearchForAccountManagerExtension s=new SearchForAccountManagerExtension(stdController);
-           s.clearSearch();
+           SearchForAccountManagerExtension searchControllerObj=new SearchForAccountManagerExtension(stdController);
+           searchControllerObj.clearSearch();
        system.test.stopTest();
-       System.assertEquals(true,s.show);
-       System.assertEquals(accountList.size(),s.countOfRows);
+       System.assertEquals(true,searchControllerObj.show);
+       System.assertEquals(accountList.size(),searchControllerObj.countOfRows);
    }
    static testMethod void searchForUnAvailableRecord()
    {
@@ -65,10 +65,10 @@ private class SearchKeywordTest {
        system.test.startTest();
            List<Account> accountList = AccontFactoryNew.createAndInsertAccounts(100);
            ApexPages.StandardSetController stdController = new ApexPages.StandardSetController(accountList);
-           SearchForAccountManagerExtension s=new SearchForAccountManagerExtension(stdController);
-           s.searchText = 'kkr';
-           s.searchRecords();
+           SearchForAccountManagerExtension searchControllerObj=new SearchForAccountManagerExtension(stdController);
+           searchControllerObj.searchText = 'kkr';
+           searchControllerObj.searchRecords();
        system.test.stopTest();
-       System.assertEquals(0,s.countOfRows);
+       System.assertEquals(0,searchControllerObj.countOfRows);
    }
 }
