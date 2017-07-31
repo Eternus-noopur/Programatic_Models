@@ -31,7 +31,7 @@ private class SearchKeywordTest {
            s.searchText = 'Acc';
            s.searchRecords();
        system.test.stopTest();
-       System.assertEquals(100,s.countOfRows);
+       System.assertEquals(accountList.size(),s.countOfRows);
    }
    
    static testMethod void searchFailTest()
@@ -57,7 +57,7 @@ private class SearchKeywordTest {
            s.clearSearch();
        system.test.stopTest();
        System.assertEquals(true,s.show);
-       System.assertEquals(100,s.countOfRows);
+       System.assertEquals(accountList.size(),s.countOfRows);
    }
    static testMethod void searchForUnAvailableRecord()
    {
