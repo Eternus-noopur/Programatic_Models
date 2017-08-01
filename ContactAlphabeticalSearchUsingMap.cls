@@ -3,12 +3,10 @@ public with sharing class ContactAlphabeticalSearchUsingMap {
     public String searchAlphabet{get;set;}
     public list<contact> contactList{set;get;}
     public list<contact> showContacts{set;get;}
-    public static contact con {set; get;}
-    public List<Integer> charArr= new List<Integer>();
+    public static contact contacts {set; get;}
     public map<String,List<Contact>> mapAlphabetRecord{get;set;}
     public String convertedChar;
     public String query;
-   
     public ContactAlphabeticalSearchUsingMap()
     {
         mapAlphabetRecord = new map<String,List<Contact>>(); 
@@ -20,7 +18,7 @@ public with sharing class ContactAlphabeticalSearchUsingMap {
         {
             charList.clear();
             charList.add(alphabetAsci);  
-            String convertedChar = String.fromCharArray(charArr); 
+            String convertedChar = String.fromCharArray(charList); 
             alpabetList.add(convertedChar);
             mapAlphabetRecord.put(convertedChar,new List<Contact>());
         }
@@ -40,7 +38,7 @@ public with sharing class ContactAlphabeticalSearchUsingMap {
     @RemoteAction
     public static void deleteContact(Id accountId)
     {
-        con=[select id from Contact where Id=:accountId];
-        delete con;
+        contacts = [select id from Contact where Id=:accountId];
+        delete contacts;
     }
 }
