@@ -25,10 +25,10 @@ Q1. The account manager now wants the function to search for a particular accoun
         <apex:pageBlock id="searchResult" title="Accounts">
             <apex:panelGrid columns="1" style="float:right;">
             </apex:panelGrid>
-            <apex:pageBlockTable value="{!accounts}" var="a" rendered="{!show}">
-                <apex:column value="{!a.Name}" />
-                <apex:column value="{!a.AccountNumber}" />
-                <apex:column value="{!a.Phone}" />
+            <apex:pageBlockTable value="{!accounts}" var="account" rendered="{!show}">
+                <apex:column value="{!account.Name}" />
+                <apex:column value="{!account.AccountNumber}" />
+                <apex:column value="{!account.Phone}" />
             </apex:pageBlockTable>
         </apex:pageBlock>
     </apex:form>
