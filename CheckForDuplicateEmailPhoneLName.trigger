@@ -10,7 +10,6 @@ trigger CheckForDuplicateEmailPhoneLName on Contact (before insert, before updat
     if(triggerCustomSettingobj != NULL && 'False'.equalsIgnorecase(String.valueOf(triggerCustomSettingobj.IsEnable__c))){ 
         return;
     }
-    
     Map<String, Contact> contactMap = new Map<String, Contact>();
     for (Contact contactObj : System.Trigger.new) {
         if ((contactObj.Email != null) &&(System.Trigger.isInsert ||(contactObj.Email != System.Trigger.oldMap.get(contactObj.Id).Email)))
@@ -23,10 +22,8 @@ trigger CheckForDuplicateEmailPhoneLName on Contact (before insert, before updat
             {
                     contactMap.put(contactObj.Email, contactObj);
             }
-       }
-    
-    
-    if ((contactObj.Lastname != null) &&(System.Trigger.isInsert ||(contactObj.Lastname != System.Trigger.oldMap.get(contactObj.Id).Lastname)))
+        }
+        if ((contactObj.Lastname != null) &&(System.Trigger.isInsert ||(contactObj.Lastname != System.Trigger.oldMap.get(contactObj.Id).Lastname)))
         {
             if (contactMap.containsKey(contactObj.Lastname))
             {
@@ -36,9 +33,8 @@ trigger CheckForDuplicateEmailPhoneLName on Contact (before insert, before updat
             {
                     contactMap.put(contactObj.Lastname, contactObj);
             }
-       }
-    
-    if ((contactObj.Phone != null) &&(System.Trigger.isInsert ||(contactObj.Phone != System.Trigger.oldMap.get(contactObj.Id).Phone)))
+        }
+        if((contactObj.Phone != null) &&(System.Trigger.isInsert ||(contactObj.Phone != System.Trigger.oldMap.get(contactObj.Id).Phone)))
         {
             if (contactMap.containsKey(contactObj.Phone))
             {
@@ -48,17 +44,15 @@ trigger CheckForDuplicateEmailPhoneLName on Contact (before insert, before updat
             {
                     contactMap.put(contactObj.Phone, contactObj);
             }
-       }
+        }
     }
     for (Contact contactObject : [SELECT Email,LastName,Phone FROM Contact WHERE Email IN :contactMap.KeySet() OR LastName IN :contactMap.KeySet() OR Phone IN :contactMap.KeySet()]) 
-        
     {
         Contact newContactForEmail = contactMap.get(contactObject.Email);
         Contact newContactForName = contactMap.get(contactObject.LastName);
         Contact newContactForPhone = contactMap.get(contactObject.Phone);
         if(newContactForEmail!=null)
         newContactForEmail.Email.addError('A contact with this email address already exists.');
-        
         if(newContactForName!=null)
         newContactForName.LastName.addError('A contact with this Last Name already exists.');
         
