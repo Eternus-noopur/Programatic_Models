@@ -1,5 +1,4 @@
 public with sharing class BatchJSON_Handler {
-    
     public static void createRecordsBasedOnEvents(List<Events__c> events) {
         List<sObject> recordList = new List<sObject>();
         Set<String> recordFields;
@@ -40,8 +39,7 @@ public with sharing class BatchJSON_Handler {
                                             && !desribeResult.isDefaultedOnCreate()) {
                                             if(!recordFields.contains(field.toLowerCase())) {
                                                 containsRequiredFields = false;
-                                                event.Error_If_Any__c =
-                                                            System.Label.Event_RequiredNotProvided;
+                                                event.Error_If_Any__c = System.Label.Event_RequiredNotProvided;
                                                 break;
                                             }
                                         }
@@ -71,7 +69,6 @@ public with sharing class BatchJSON_Handler {
             insert recordList;
             update events;
         } catch(Exception e) {
-            System.debug('ERROR::::::::' + e);
         }
     }
 }
