@@ -41,7 +41,9 @@ public  class StudentRegistrationController {
             }
         }
         else
+        {
             ApexPages.addmessage(new ApexPages.message(ApexPages.severity.INFO,System.Label.EmptyFormMessage));
+        }
         return null; 
     }
 }
