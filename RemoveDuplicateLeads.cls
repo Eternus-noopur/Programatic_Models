@@ -4,14 +4,12 @@ global class RemoveDuplicateLeads implements Database.Batchable<sObject> , Datab
     global List<Lead> duplicateList = new List<Lead>();
     
     global Database.QueryLocator start(Database.BatchableContext BC){
-         return Database.getQueryLocator('Select id, name, email,phone from lead');
+         return Database.getQueryLocator('Select id, name, email,phone from lead limit 1000');
     }
-
     global void execute(Database.BatchableContext BC, List<Lead> leadList){
         EliminateDuplicateRecords__c eliminateRecord = EliminateDuplicateRecords__c.getinstance();
         for(Lead leadObject : leadList)
         {
-            
             if(eliminateRecord.Email__c)
             {
                 if(leadObject.Email!=null)
@@ -44,7 +42,6 @@ global class RemoveDuplicateLeads implements Database.Batchable<sObject> , Datab
                     }
                 }       
             }
-            
             if(eliminateRecord.Name__c )
             {
                 if(leadObject.name!=null)
@@ -68,7 +65,6 @@ global class RemoveDuplicateLeads implements Database.Batchable<sObject> , Datab
         {
             delete duplicateList;
         }
-                        
     }
     global void finish(Database.BatchableContext BC){
            
