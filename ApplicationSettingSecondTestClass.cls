@@ -24,6 +24,8 @@ private class ApplicationSettingSecondTestClass {
     static testMethod void checkForLanguageCode() {
         UnitTestDataFactory.dataForLanguageCustomSetting();
         system.test.startTest();
+            PageReference pageRef = Page.ApplicationSettingSecond;
+            system.test.setCurrentPage(pageRef);
             Student__c studentObj = new Student__c();
             ApexPages.StandardController controller = new ApexPages.StandardController(studentObj);
             StudentRegistrationController studentRegistrationObject = new StudentRegistrationController(controller);
@@ -35,6 +37,8 @@ private class ApplicationSettingSecondTestClass {
     static testMethod void checkEmptyFormPageMessage() {
         UnitTestDataFactory.dataForLanguageCustomSetting();
         system.test.startTest();
+            PageReference pageRef = Page.ApplicationSettingSecond;
+            system.test.setCurrentPage(pageRef);
             Student__c studentObj = new Student__c(Name='Test',City__c='Shimla',Country__c='India',
                                                    Gender__c='Female');
             ApexPages.StandardController controller = new ApexPages.StandardController(studentObj);
@@ -48,6 +52,8 @@ private class ApplicationSettingSecondTestClass {
     static testMethod void checkSuccessPageMessage() {
         List<Student__c> studentInfo =  UnitTestDataFactory.createRecordsInStudent(1,True);
         system.test.startTest();
+            PageReference pageRef = Page.ApplicationSettingSecond;
+            system.test.setCurrentPage(pageRef);
             ApexPages.StandardController controller = new ApexPages.StandardController(studentInfo[0]);
             StudentRegistrationController studentRegistrationObject = new StudentRegistrationController(controller);
             studentRegistrationObject.saveMethod();
