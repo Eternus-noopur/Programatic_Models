@@ -4,7 +4,6 @@ global class SoapServiceForManupulatingLeads {
         webservice Id leadId;
         webservice String status;
     }
-
     webservice static Response createLead(String firstName, String lastName,String email, String phone, String Company)
     {
         try
@@ -31,7 +30,6 @@ global class SoapServiceForManupulatingLeads {
             return response;
          }
     }
-     
     webservice static Response deleteLeadRecord(String firstName, String lastName,String email, String phone, String Company)
     {
         try
@@ -53,7 +51,6 @@ global class SoapServiceForManupulatingLeads {
              return response;
           }
     }
-     
     webservice static Response updateLead(String firstName, String lastName,String email, String phone, String Company)
     {
         try
@@ -75,5 +72,5 @@ global class SoapServiceForManupulatingLeads {
             response.status = 'Failure';
             return response;
          }   
-     }
+    }
 }
