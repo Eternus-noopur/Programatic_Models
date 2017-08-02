@@ -28,7 +28,7 @@ private class RemovalOfDuplicateLeadsTestClass {
     }
     static testMethod void onlyNameWithNoNameDuplication() {
         List<Lead> leads = LeadFactory.createLeads(100);
-        for(Integer index = 0; index<100; index = i+2) {
+        for(Integer index = 0; index<100; index = index+2) {
             leads[index].Phone = leads[index + 1].Phone;
             leads[index].Email = leads[index + 1].Email;
         }
