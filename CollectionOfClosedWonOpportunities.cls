@@ -1,3 +1,14 @@
+/************************************************************************
+
+A. Collection of Closed Won Opportunities
+1. The Primary contact associated with an account needs to know which all are the closed won
+opportunities for his account per day.
+2. Create a process which will run every day in the midnight & collect all the Closed won opportunities of
+that account in a day & send an email to Primary Contact.
+3. The email body should contain the Opportunity Name & it's respective amount with the aggregated
+amount in the end.
+
+*************************************************************************/
 global class CollectionOfClosedWonOpportunities implements Database.Batchable<sObject> , Database.Stateful {
     global Map<Id,Map<String,List<Opportunity>>> mapContactOpportunity =new Map<Id,Map<String,List<Opportunity>>>();
     global Map<Id,Double> aggregateAmountOnAccount = new Map<Id,Double>();
