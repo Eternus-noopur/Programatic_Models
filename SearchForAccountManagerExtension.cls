@@ -16,14 +16,22 @@ public with sharing class SearchForAccountManagerExtension {
         if(searchText.length()<3)
         {
             show = false;
-            ApexPages.addmessage(new ApexPages.message(ApexPages.severity.ERROR,'Please enter atleast 3 characters...'));
+            ApexPages.addmessage(new ApexPages.message(ApexPages.severity.ERROR,system.label.minimumWordLimitLabel));
         }
         else
         {
             show = true;
             searchText = searchText + '%';
             accounts = [Select Id, Name, AccountNumber, Phone from Account where Name Like :searchText];
-            countOfRows = accounts.size();
+            if(accounts.size()>0)
+            {
+                countOfRows = accounts.size();
+            }
+            else
+            {
+                 ApexPages.addmessage(new ApexPages.message(ApexPages.severity.INFO,system.label.RecordNotFound));   
+            }
+            
         }
     }
     public void clearSearch()
