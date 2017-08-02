@@ -1,3 +1,14 @@
+/*********************************************************************************
+
+B. Removal of duplicate Leads
+1. During the Campaigning, It might happen that representative creates duplicate leads in an org.
+2. So admin want to build a process which will run every 3 hours/day & remove the duplicate leads from
+the org.
+3. The criteria to find the duplicate records should be configurable.
+
+
+*********************************************************************************/
+
 global class RemoveDuplicateLeads implements Database.Batchable<sObject> , Database.Stateful{
     global set<string> uniqueSet = new set<string>(); 
     global set<Lead> duplicateSet = new set<Lead>();
