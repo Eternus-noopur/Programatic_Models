@@ -31,7 +31,6 @@ public with sharing class SearchForAccountManagerExtension {
             {
                  ApexPages.addmessage(new ApexPages.message(ApexPages.severity.INFO,system.label.RecordNotFound));   
             }
-            
         }
     }
     public void clearSearch()
