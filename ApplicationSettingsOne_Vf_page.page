@@ -1,0 +1,13 @@
+<apex:page controller="CountryCityDependency" >
+    <apex:form >
+        <apex:outputLabel value="{!$Label.SelectCountryLabel}"/><br/><br/>
+        <apex:selectList value="{!selectedCountry}" id="category" size="1" multiselect="false">
+            <apex:selectOptions value="{!countryList}"/>
+                <apex:actionSupport event="onchange" action="{!fetchCity}" rerender="citySelect"/>
+        </apex:selectList><br/><br/>
+        <apex:outputLabel value="{!$Label.RelatedCitiesLabel}"/><br/><br/>
+        <apex:selectList value="{!selectedCity}" size="1" multiselect="false" id="citySelect">
+            <apex:selectOptions value="{!listSelectedCity}"/>
+        </apex:selectList>
+    </apex:form>
+</apex:page>
