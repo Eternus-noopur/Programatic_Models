@@ -1,0 +1,43 @@
+<!-- 
+
+Q2. Implement “alphabetical search” on the related contacts page. The page should contain a
+    strip of all the alphabets on the top. On clicking the alphabet, the contact list should be
+    refreshed without reloading the actual page.
+    
+Q3. Create a new link on the contact row to delete the contact from the account. On clicking the
+    link, the contact should be deleted this time using VisualForce Remoting. On successful
+    deletion, an alert should be displayed on the page stating “The contact has been deleted”.
+    
+Q4. Get an image for the header of your page. Add that image to the static resources. Add the header to the page.
+    
+ -->
+<apex:page controller="ContactAlphabeticalSearchUsingMap">
+<apex:image value="{!URLFOR($Resource.HeaderImage)}" width="100%" height="20%"/>
+    <apex:form >
+        <apex:pageBlock title="Contacts">
+            <apex:toolbar id="toolbar" styleClass="rich-toolbar" style="background-color:White;background-image:none;">
+                <apex:repeat value="{!alpabetList}" var="alphabet">
+                    <apex:outputLink onclick="searchMethod('{!alphabet}');return false;">{!alphabet}</apex:outputLink>
+                </apex:repeat>
+                <apex:actionFunction name="searchMethod" action="{!display}" rerender="result">
+                    <apex:param name="idparam" assignTo="{!searchAlphabet}" value=""/>
+                </apex:actionFunction>
+            </apex:toolbar>
+        </apex:pageBlock>
+        <apex:pageBlock id="result">
+            <apex:pageBlockTable value="{!showContacts}" var="contact" rendered="{!AND(NOT(ISNULL(showContacts)),showContacts.size>0)}">
+                <apex:column value="{!contact.name}"/>
+                <apex:column value="{!contact.email}"/>
+                <apex:column value="{!contact.MobilePhone}"/>
+                <apex:column value="{!contact.Birthdate}"/>
+                <apex:column >
+                    <apex:commandLink value="Delete" onclick="deleteContact('{!contact.Id}')" rerender="result">
+                       <apex:param name="Id" value="{!contact.Id}" assignTo="{!deleteContactId}"/>
+                   </apex:commandLink>
+               </apex:column>
+            </apex:pageBlockTable>
+            <apex:outputText value="{!$Label.NoResultFound}" rendered="{!OR(ISNULL(showContacts),showContacts.size<=0)}"/>
+        </apex:pageBlock>
+    </apex:form>
+   <apex:includeScript value="{!URLFOR($Resource.JavascriptFileForAlphabeticalSearch,'JavaScriptFileForAlphabeticalSearch.js')}"/>
+</apex:page>
