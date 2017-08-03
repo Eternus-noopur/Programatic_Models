@@ -10,7 +10,7 @@ public with sharing class ContactAlphabeticalSearchUsingMap {
     public ContactAlphabeticalSearchUsingMap()
     {
         mapAlphabetRecord = new map<String,List<Contact>>(); 
-        contactList=new List<Contact>([Select name,email,birthdate,mobilePhone from contact order by Name limit 1000]);
+        contactList=new List<Contact>([Select name,email,birthdate,mobilePhone from contact order by Name limit 50000]);
         showContacts = new  list<contact>();
         alpabetList = new List<String>();
         List<Integer> charList= new List<Integer>();
@@ -22,17 +22,19 @@ public with sharing class ContactAlphabeticalSearchUsingMap {
             alpabetList.add(convertedChar);
             mapAlphabetRecord.put(convertedChar,new List<Contact>());
         }
-        mapAlphabetRecord.put('All',new List<Contact>());
-        alpabetList.add('All');
+         alpabetList.add('All');
         for(Contact contact : contactList)
         {
-            mapAlphabetRecord.get('All').add(contact);  
             String start = contact.Name.substring(0,1).toUppercase();
             mapAlphabetRecord.get(start).add(contact);
         }
     }
     public void display(){
-        showContacts = mapAlphabetRecord.get(searchAlphabet);
+        if(searchAlphabet.equals('All')) {
+            showContacts.addAll(contactList);
+        } else {
+            showContacts = mapAlphabetRecord.get(searchAlphabet);
+        }
     }
     
     @RemoteAction
