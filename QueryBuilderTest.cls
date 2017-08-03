@@ -6,7 +6,6 @@ private class QueryBuilderTest {
     {
         AccontFactoryNew.createRecordsInAccount(100);
     }
-
     static testMethod void testForAccountObject() 
     {
         system.test.startTest();
@@ -15,13 +14,12 @@ private class QueryBuilderTest {
         controller.details();
         system.test.stopTest();
         System.assert(controller.fields != NULL);
-        System.assert(controller.fnotselected != NULL);
-        System.assert(controller.fselected.isEmpty());
+        System.assert(controller.fieldnotselected != NULL);
+        System.assert(controller.fieldselected.isEmpty());
         System.assertEquals(true,controller.isObjSelected);
         System.assertEquals(controller.feildOptions.size(),controller.fields.size());
         System.assert(controller.selectedfieldOptions.isEmpty());
     }
-
     static testMethod void testFieldSelectedScenario()
     {
         system.test.startTest();
@@ -32,17 +30,16 @@ private class QueryBuilderTest {
         controller.selectfields.add('Name');
         controller.addFields();
         system.test.stopTest();
-        System.assert(controller.fselected != NULL);
-        System.assert(controller.fselected.contains('AccountNumber'));
-        System.assert(controller.fselected.contains('Name'));
-        System.assert(!controller.fnotselected.contains('AccountNumber'));
-        System.assert(!controller.fnotselected.contains('Name'));
+        System.assert(controller.fieldselected != NULL);
+        System.assert(controller.fieldselected.contains('AccountNumber'));
+        System.assert(controller.fieldselected.contains('Name'));
+        System.assert(!controller.fieldnotselected.contains('AccountNumber'));
+        System.assert(!controller.fieldnotselected.contains('Name'));
         controller.selectedfields.add('AccountNumber');
         controller.removeFields();
-        System.assert(controller.fnotselected.contains('AccountNumber'));
-        System.assert(!controller.fselected.contains('AccountNumber'));
+        System.assert(controller.fieldnotselected.contains('AccountNumber'));
+        System.assert(!controller.fieldselected.contains('AccountNumber'));
     }
-
     static testMethod void testNoneObjectSelectedScenario()
     {
         system.test.startTest();
@@ -58,7 +55,6 @@ private class QueryBuilderTest {
         System.assertEquals(false,controller.isObjSelected);
         System.assertEquals(false,controller.isQueryExecuted);
     }
-
     static testMethod void testExecuteQueryScenario()
     {
         system.test.startTest();
@@ -70,10 +66,8 @@ private class QueryBuilderTest {
         controller.addFields();
         controller.queryData();
         system.test.stopTest();
-        System.assertEquals(false,controller.isQueryExecuted);
         System.assertEquals(true,controller.isQueryExecuted);
     }
-    
     static testMethod void testExecuteQueryWithNoFieldsScenario()
     {
         system.Test.startTest();
@@ -87,9 +81,8 @@ private class QueryBuilderTest {
         System.assertEquals(false,controller.isQueryExecuted);
         System.assertEquals('SELECT  FROM account ORDER BY Id ASC LIMIT 500',controller.query);
         List<Apexpages.Message> msgs = ApexPages.getMessages();
-        System.assertEquals('Please select few fields to query',msgs[0].getDetail());
+        System.assertEquals(system.label.FieldSelectionMessage,msgs[0].getDetail());
     }
-
     static testMethod void testExecuteQueryWithInvalidFieldsScenario()
     {
         system.Test.startTest();
@@ -102,7 +95,7 @@ private class QueryBuilderTest {
         controller.addFields();
         controller.queryData();
         system.Test.stopTest();
-        System.assertEquals(controller.fselected.size(),controller.fieldsTobeRetrieved.size());
+        System.assertEquals(controller.fieldselected.size(),controller.fieldsTobeRetrieved.size());
         System.assertEquals('SELECT LastName FROM account ORDER BY Id ASC LIMIT 500',controller.query);
         List<Apexpages.Message> msgs = ApexPages.getMessages();
         System.assertEquals('No such column \'LastName\' on entity \'Account\'. If you are attempting to use a custom field, be sure to append the \'__c\' after the custom field name. Please reference your WSDL or the describe call for the appropriate names.',msgs[0].getDetail(),'Page is not returing error message even when invalid fields are selected');
