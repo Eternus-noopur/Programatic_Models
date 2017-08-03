@@ -36,7 +36,7 @@ public with sharing class SearchForAccountManagerExtension {
     public void clearSearch()
     {
         show = true;
-        accounts = [Select Id, Name, AccountNumber, Phone from Account order by Name];
+        accounts = [Select Id, Name, AccountNumber, Phone from Account order by Name limit 1000];
         countOfRows = accounts.size();
     }
 }
