@@ -5,9 +5,9 @@ public class QueryBuilderController {
     public String selectedObj {set;get;}
     public List<String> objlst {set;get;}
     public List<String> fields{set;get;}
-    public Set<String> fselected{set;get;}
+    public Set<String> fieldselected{set;get;}
     public List<String> fieldsTobeRetrieved{set;get;}
-    public Set<string> fnotselected{set;get;}
+    public Set<string> fieldnotselected{set;get;}
     public Map<String, Schema.SObjectField> sObjectFields{set;get;}
     public Map<String, Schema.SObjectType> sobjectType{set;get;}
     public String objDescription {set;get;}
@@ -35,8 +35,8 @@ public class QueryBuilderController {
         selectfields = new List<String>();
         selectedfields = new List<String>();
         fields = new List<String>();
-        fselected = new Set<String>();
-        fnotselected = new Set<String>();
+        fieldselected = new Set<String>();
+        fieldnotselected = new Set<String>();
         selectedfieldOptions = new List<SelectOption>();
         feildOptions = new List<SelectOption>();
         
@@ -67,8 +67,6 @@ public class QueryBuilderController {
         selectedOrder = 'ASC';
     }
 
-
-
     public void details(){
         isQueryExecuted = false;
         query = '';
@@ -87,9 +85,9 @@ public class QueryBuilderController {
                 }
             }
             fields.sort();
-            fnotselected.clear();
-            fselected.clear();
-            fnotselected.addAll(fields);
+            fieldnotselected.clear();
+            fieldselected.clear();
+            fieldnotselected.addAll(fields);
             isObjSelected = true;
             show();
         } 
@@ -103,15 +101,13 @@ public class QueryBuilderController {
     {
         feildOptions.clear();
         selectedfieldOptions.clear();
-        System.debug('Inside Show ::: fnotselected:::'+fnotselected);
-        System.debug('Inside Show ::: fnsoptions:::'+feildOptions);
-        for(String s : fnotselected)
+        for(String s : fieldnotselected)
         {
             SelectOption op = new SelectOption(s,s);
             feildOptions.add(op);
         }
         System.debug('After Show ::: fnsoptions:::'+feildOptions);
-        for(String s : fselected)
+        for(String s : fieldselected)
         {
             SelectOption op = new SelectOption(s,s);
             selectedfieldOptions.add(op);
@@ -119,22 +115,20 @@ public class QueryBuilderController {
     }
     
   public void addFields(){
-        fnotselected.removeAll(selectfields);
-        fselected.addAll(selectfields);
+        fieldnotselected.removeAll(selectfields);
+        fieldselected.addAll(selectfields);
         show();
     }
 
     public void removeFields(){
-        System.debug('Rfields:::'+selectedfields);
-        fnotselected.addAll(selectedfields);
-        System.debug('fnotselected:::'+fnotselected);
-        fselected.removeAll(selectedfields);
+        fieldnotselected.addAll(selectedfields);
+        fieldselected.removeAll(selectedfields);
         show();
     }
     
 public void queryData(){
         fieldsTobeRetrieved.clear();
-        fieldsTobeRetrieved.addAll(fselected);
+        fieldsTobeRetrieved.addAll(fieldselected);
         query = 'SELECT ';
         query += String.join(fieldsTobeRetrieved, ',');
         query += ' FROM '+ selectedObj +' ORDER BY Id '+selectedOrder+' LIMIT '+ selectedLimit;
