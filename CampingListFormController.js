@@ -5,5 +5,4 @@
         	helper.createItem(component, newItem);
     	}
     }
-
 })
