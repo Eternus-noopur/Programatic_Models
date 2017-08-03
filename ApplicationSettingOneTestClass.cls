@@ -1,13 +1,13 @@
 @isTest
 private class ApplicationSettingOneTestClass {
     static testMethod void checkFortotalCountryList() {
-        List<City__c> cityLst = UnitTestDataFactory.createRecordsInCityCustomSetting(4,True);
+        List<City__c> countryLst = UnitTestDataFactory.createRecordsInCityCustomSettingforCountries(3,True);
         system.test.startTest();
             PageReference pageRef = Page.ApplicationSettingsOne_Vf_page;
             system.test.setCurrentPage(pageRef);
             CountryCityDependency cityCountryObj = new CountryCityDependency();
         system.test.stopTest();
-        system.assertEquals(Integer.ValueOf(System.label.noOfCountries),cityCountryObj.countryList.size());   
+        system.assertEquals(countryLst.size(),cityCountryObj.countryList.size());   
     }
     static testMethod void cityCountryDependenciesUnitTest() {
         List<City__c> cityLst = UnitTestDataFactory.createRecordsInCityCustomSetting(4,True);
