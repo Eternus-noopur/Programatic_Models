@@ -39,7 +39,6 @@ public class QueryBuilderController {
         fieldnotselected = new Set<String>();
         selectedfieldOptions = new List<SelectOption>();
         feildOptions = new List<SelectOption>();
-        
         sobjectType = Schema.getGlobalDescribe();
         for(Schema.SObjectType objToken : sobjectType.values())
         {
@@ -48,13 +47,12 @@ public class QueryBuilderController {
                 objlst.add(objDescribe.getName());
             }
         }
-    
         objlst.sort();
         SelectOption none = new SelectOption('None','-None-');
         objects.add(none);
-        for(String s : objlst)
+        for(String stringObj : objlst)
         {
-            SelectOption option = new SelectOption(s,s);
+            SelectOption option = new SelectOption(stringObj,stringObj);
             objects.add(option);
         }
         limitOptions.add(new SelectOption('500','500'));
@@ -66,7 +64,6 @@ public class QueryBuilderController {
         orderOptions.add(new SelectOption('DESC','Descending'));
         selectedOrder = 'ASC';
     }
-
     public void details(){
         isQueryExecuted = false;
         query = '';
@@ -96,7 +93,6 @@ public class QueryBuilderController {
             isObjSelected = false;
         }
     }
-    
     public void show()
     {
         feildOptions.clear();
@@ -106,27 +102,24 @@ public class QueryBuilderController {
             SelectOption op = new SelectOption(s,s);
             feildOptions.add(op);
         }
-        System.debug('After Show ::: fnsoptions:::'+feildOptions);
+        System.debug('After Show ::: '+feildOptions);
         for(String s : fieldselected)
         {
             SelectOption op = new SelectOption(s,s);
             selectedfieldOptions.add(op);
         }
     }
-    
-  public void addFields(){
+    public void addFields(){
         fieldnotselected.removeAll(selectfields);
         fieldselected.addAll(selectfields);
         show();
     }
-
     public void removeFields(){
         fieldnotselected.addAll(selectedfields);
         fieldselected.removeAll(selectedfields);
         show();
     }
-    
-public void queryData(){
+    public void queryData(){
         fieldsTobeRetrieved.clear();
         fieldsTobeRetrieved.addAll(fieldselected);
         query = 'SELECT ';
@@ -137,7 +130,7 @@ public void queryData(){
             try{
                 dataFromQuery = Database.query(query);
                 if(dataFromQuery.size()<1){
-                    ApexPages.addmessage(new ApexPages.message(ApexPages.severity.ERROR,'No records to show for query'));
+                    ApexPages.addmessage(new ApexPages.message(ApexPages.severity.ERROR,system.label.NoRecordAvailable));
                 }
                 isQueryExecuted = true;
             }catch(Exception e)
@@ -147,9 +140,7 @@ public void queryData(){
         } 
         else
         {
-            ApexPages.addmessage(new ApexPages.message(ApexPages.severity.ERROR,'Please select few fields to query'));
+            ApexPages.addmessage(new ApexPages.message(ApexPages.severity.ERROR,system.label.FieldSelectionMessage));
         }
-        System.debug('query is:::'+query);
-        System.debug('Data is:::'+dataFromQuery);
     }
 }
