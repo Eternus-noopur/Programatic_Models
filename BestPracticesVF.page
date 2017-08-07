@@ -11,7 +11,6 @@ TODO:
 -Develop the necessary Test code to attain the right code coverage (minimum 90% with at least 4 test cases).
 
  -->
- 
 <apex:page standardController="Invoice_Containers__c" extensions="ABCExtension" renderAs="PDF">
     <apex:form styleclass="borderClass" style="border:1px solid blue;">
         <apex:stylesheet value="{!URLFOR($Resource.BestPracticeCSS)}"/>
@@ -75,12 +74,11 @@ TODO:
                         </apex:dataTable>
                     </td>
                 </tr>
-                
             </table>
         </apex:pageBlock>
-            <apex:pageBlock >
-                <apex:outputLabel styleclass="footer" value="{!$Label.Footer}"/><br/>
-                <apex:outputLabel styleclass="footer" value="{!$Label.Footer2}"/>
-            </apex:pageBlock>
+        <apex:pageBlock >
+            <apex:outputLabel styleclass="footer" value="{!$Label.Footer}"/><br/>
+            <apex:outputLabel styleclass="footer" value="{!$Label.Footer2}"/>
+        </apex:pageBlock>
     </apex:form>
 </apex:page>
