@@ -1,37 +1,16 @@
-/**
- * This class contains unit tests for validating the behavior of Apex classes
- * and triggers.
- *
- * Unit tests are class methods that verify whether a particular piece
- * of code is working properly. Unit test methods take no arguments,
- * commit no data to the database, and are flagged with the testMethod
- * keyword in the method definition.
- *
- * All test methods in an organization are executed whenever Apex code is deployed
- * to a production organization to confirm correctness, ensure code
- * coverage, and prevent regressions. All Apex classes are
- * required to have at least 75% code coverage in order to be deployed
- * to a production organization. In addition, all triggers must have some code coverage.
- * 
- * The @isTest class annotation indicates this class only contains test
- * methods. Classes defined with the @isTest annotation do not count against
- * the organization size limit for all Apex scripts.
- *
- * See the Apex Language Reference for more information about Testing and Code Coverage.
- */
 @isTest
 private class ABCExtensionTestClass {
-
      static testMethod void myUnitTest() {
        system.test.startTest();
-           Invoice_Containers__c invoice = ABCContainersfactory.createAndInsertInvoices();
-           ApexPages.StandardController stdController = new ApexPages.StandardController(invoice);
-           ABCExtension s = new ABCExtension(stdController);
+           Invoice_Containers__c invoiceObj = ABCContainersfactory.createAndInsertInvoices();
+           ApexPages.StandardController stdController = new ApexPages.StandardController(invoiceObj);
+           ABCExtension controllerObj = new ABCExtension(stdController);
        system.test.stopTest();
-       System.assertEquals(10000, s.invoiceContainer.Service_Fee__c);
-       System.assertEquals(20000, s.invoiceContainer.Total_Labour_Cost__c);
-       System.assertEquals(20, s.invoiceContainer.Discount__c);
-       System.assertEquals(15, s.invoiceContainer.Tax__c);
-       System.assertEquals(27600.00, s.invoiceContainer.Total_Cost__c);
+       Invoice_Containers__c invoice  = [Select id,Service_Fee__c,Total_Labour_Cost__c,Discount__c,Tax__c,Total_Cost__c from Invoice_Containers__c limit 50000];
+       System.assertEquals(invoiceObj.Service_Fee__c , controllerObj.invoiceContainer.Service_Fee__c);
+       System.assertEquals(invoiceObj.Total_Labour_Cost__c , controllerObj.invoiceContainer.Total_Labour_Cost__c);
+       System.assertEquals(invoiceObj.Discount__c , controllerObj.invoiceContainer.Discount__c);
+       System.assertEquals(invoiceObj.Tax__c , controllerObj.invoiceContainer.Tax__c);
+       System.assertEquals(invoiceObj.Total_Cost__c , controllerObj.invoiceContainer.Total_Cost__c);
    }
 }
