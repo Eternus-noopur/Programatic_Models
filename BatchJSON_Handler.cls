@@ -5,11 +5,11 @@ public with sharing class BatchJSON_Handler {
         Map<String,Schema.SObjectField> allFieldsOfObject;
         for(Events__c event : events) {
             Boolean isValidField = true, containsRequiredFields = true;
-            if(event.JSON__c != NULL) {
+            if(String.isNotBlank(event.JSON__c)) {
                 try {
                     Map<String, Object> jsonFieldMap = (Map<String, Object>)JSON.deserializeUntyped(event.JSON__c);
-                    String ObjectName = (String)jsonFieldMap.get('Object Name');
-                    if(ObjectName != NULL) {
+                    String objectName = (String)jsonFieldMap.get('Object Name');
+                    if( String.isNotBlank(objectName)) {
                         if(SObjectUtil.isObjectExist(ObjectName)) {
                             if(jsonFieldMap.containsKey('JSON') && jsonFieldMap.get('JSON')!='') {
                                 String objectJson = JSON.serialize(jsonFieldMap.get('JSON'));
@@ -19,7 +19,7 @@ public with sharing class BatchJSON_Handler {
                                 sObject record = fetchedObjectType.newSObject();
                                 allFieldsOfObject = fetchedObjectType.getDescribe().fields.getMap() ;
                                 for(String fieldProvided: jsonMap.keySet()) {
-                                    if(allFieldsOfObject.keySet().contains(fieldProvided.toLowerCase())) {
+                                    if(allFieldsOfObject.containsKey(fieldProvided.toLowerCase())) {
                                         record.put(fieldProvided.toLowerCase() ,jsonMap.get(fieldProvided));
                                     } else {
                                         isValidField = false;
@@ -36,12 +36,10 @@ public with sharing class BatchJSON_Handler {
                                         Schema.DescribeFieldResult desribeResult =
                                                                         allFieldsOfObject.get(field).getDescribe();
                                         if( desribeResult.isCreateable() && !desribeResult.isNillable()
-                                            && !desribeResult.isDefaultedOnCreate()) {
-                                            if(!recordFields.contains(field.toLowerCase())) {
+                                            && !desribeResult.isDefaultedOnCreate() && !recordFields.contains(field.toLowerCase())) {
                                                 containsRequiredFields = false;
                                                 event.Error_If_Any__c = System.Label.Event_RequiredNotProvided;
                                                 break;
-                                            }
                                         }
                                     }
                                     if(containsRequiredFields) {
