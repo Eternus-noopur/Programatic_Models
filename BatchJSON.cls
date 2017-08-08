@@ -13,7 +13,7 @@ respective sObject.
 
 ****************************************************************************************/
 
-global class BatchJSON implements Database.Batchable<sobject>,Database.stateful {
+global class BatchJSON implements Database.Batchable<sobject> {
     String query = 'Select JSON__c, IsProcessed__c from Events__c where IsProcessed__c = false';
     global Database.QueryLocator start(Database.BatchableContext BC) {
        return Database.getQueryLocator(query);
