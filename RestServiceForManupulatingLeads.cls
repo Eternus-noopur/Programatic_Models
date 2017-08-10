@@ -21,7 +21,7 @@ global with sharing class RestServiceForManupulatingLeads {
         }
         catch(Exception exp){
             response.addHeader('Content-Type', 'application/json');
-            String jsonResponse = '{"response": {"isSuccess": "False","Status":"'+exp.getmessage()+'" }}';
+            String jsonResponse = '{"response": {"isSuccess": "False","Status":"'+exp.getMessage()+'" }}';
             response.responseBody = blob.valueOf(jsonResponse);
         }
     }
@@ -47,7 +47,7 @@ global with sharing class RestServiceForManupulatingLeads {
         catch(Exception exp)
         {
             response.addHeader('Content-Type', 'application/json');
-            String jsonResponse = '{"response": {"isSuccess": "False","Status":"'+exp.getmessage()+'" }}';
+            String jsonResponse = '{"response": {"isSuccess": "False","Status":"'+exp.getMessage()+'" }}';
             response.responseBody = blob.valueOf(jsonResponse);
         }
     }
