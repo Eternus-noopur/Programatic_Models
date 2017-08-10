@@ -1,7 +1,10 @@
 @isTest
+
 private class JSONTestClass {
     static testMethod void singleInvalidJSON() {
-        String jsonField = '{"JSON":{"Name":"Batch8"}"Object Name":"Account"}';
+        List<String> jsonField = new List<String>();
+        String json = '{"JSON":{"Name":"Batch8"}"Object Name":"Account"}';
+        jsonField.add(json);
         EventFactory.createEvents(1, jsonField, true);
         system.test.startTest();
             BatchJSON batchObj = new BatchJSON();
@@ -12,7 +15,9 @@ private class JSONTestClass {
         System.assertEquals(System.Label.Event_InvalidJSON, event.Error_If_Any__c);
     }
     static testMethod void singleFieldEmpty() {
-        String jsonField = '';
+        List<String> jsonField = new List<String>();
+        String json = '';
+        jsonField.add(json);
         EventFactory.createEvents(1, jsonField, true);
         system.test.startTest();
             BatchJSON batchObj = new BatchJSON();
@@ -23,7 +28,9 @@ private class JSONTestClass {
         System.assertEquals(System.Label.Event_FieldEmpty, event.Error_If_Any__c);
     }
     static testMethod void singleNoObject() {
-        String jsonField = '{"JSON":{"Name":"Batch8"}}';
+        List<String> jsonField = new List<String>();
+        String json = '{"JSON":{"Name":"Batch8"}}';
+        jsonField.add(json);
         EventFactory.createEvents(1, jsonField, true);
         system.test.startTest();
             BatchJSON batchObj = new BatchJSON();
@@ -34,7 +41,9 @@ private class JSONTestClass {
         System.assertEquals(System.Label.Event_NoObjectName, event.Error_If_Any__c);
     }
     static testMethod void singleInvalidObjectName() {
-        String jsonField = '{"JSON":{"Name":"Batch8"},"Object Name":"Account1"}}';
+        List<String> jsonField = new List<String>();
+        String json = '{"JSON":{"Name":"Batch8"},"Object Name":"Account1"}}';
+        jsonField.add(json);
         EventFactory.createEvents(1, jsonField, true);
         system.test.startTest();
             BatchJSON batchObj = new BatchJSON();
@@ -45,7 +54,9 @@ private class JSONTestClass {
         System.assertEquals(System.Label.Event_InvalidObjectName, event.Error_If_Any__c);
     }
     static testMethod void singleNoJSON() {
-        String jsonField = '{"Object Name":"Account"}}';
+        List<String> jsonField = new List<String>();
+        String json = '{"Object Name":"Account"}}';
+        jsonField.add(json);
         EventFactory.createEvents(1, jsonField, true);
         system.test.startTest();
             BatchJSON batchObj = new BatchJSON();
@@ -56,7 +67,9 @@ private class JSONTestClass {
         System.assertEquals(System.Label.Event_NoJSON, event.Error_If_Any__c);
     }
     static testMethod void singleEmptyJSON() {
-        String jsonField = '{"JSON":"","Object Name":"Account"}}';
+        List<String> jsonField = new List<String>();
+        String json = '{"JSON":"","Object Name":"Account"}}';
+        jsonField.add(json);
         EventFactory.createEvents(1, jsonField, true);
         system.test.startTest();
             BatchJSON batchObj = new BatchJSON();
@@ -67,7 +80,9 @@ private class JSONTestClass {
         System.assertEquals(System.Label.Event_NoJSON, event.Error_If_Any__c);
     }
     static testMethod void singleInvalidField() {
-        String jsonField = '{"JSON":{"Name":"Batch8", "AccountNumber1":"11111"},"Object Name":"Account"}}';
+        List<String> jsonField = new List<String>();
+        String json = '{"JSON":{"Name":"Batch8", "AccountNumber1":"11111"},"Object Name":"Account"}}';
+        jsonField.add(json);
         EventFactory.createEvents(1, jsonField, true);
         system.test.startTest();
             BatchJSON batchObj = new BatchJSON();
@@ -78,7 +93,9 @@ private class JSONTestClass {
         System.assertEquals(System.Label.Event_InvalidField, event.Error_If_Any__c);
     }
     static testMethod void singleRequiredFieldNotProvided() {
-        String jsonField = '{"JSON":{"AccountNumber":"11111"},"Object Name":"Account"}}';
+        List<String> jsonField = new List<String>();
+        String json = '{"JSON":{"AccountNumber":"11111"},"Object Name":"Account"}}';
+        jsonField.add(json);
         EventFactory.createEvents(1, jsonField, true);
         system.test.startTest();
             BatchJSON batchObj = new BatchJSON();
@@ -89,18 +106,26 @@ private class JSONTestClass {
         System.assertEquals(System.Label.Event_RequiredNotProvided, event.Error_If_Any__c);
     }
     static testMethod void singleSuccess() {
-        String jsonField = '{"JSON":{"Name":"Batch8", "AccountNumber":"11111"},"Object Name":"Account"}}';
-        EventFactory.createEvents(1, jsonField, true);
+        List<String> jsonField = new List<String>();
+        String json = '{"JSON":{"Name":"Batch8", "AccountNumber":"11111"},"Object Name":"Account"}}';
+        jsonField.add(json);
+        List<Events__c> eventList = EventFactory.createEvents(1, jsonField, true);
         system.test.startTest();
             BatchJSON batchObj = new BatchJSON();
             database.executeBatch(batchObj);
         system.test.stopTest();
         Events__c event = [Select IsProcessed__c, Error_If_Any__c from Events__c][0];
+        List<Account> account = [Select id,name,accountNumber from Account];
         System.assertEquals(true, event.IsProcessed__c);
         System.assertEquals(null, event.Error_If_Any__c);
+        System.assertEquals('batch8',account[0].Name);
+        System.assertEquals('11111',account[0].AccountNumber);
+        System.assertEquals(eventList.size(),account.size());
     }
     static testMethod void singleException() {
-        String jsonField = '{"JSON":{"Name":"Batch8", "ParentId":"abcd"},"Object Name":"Account"}}';
+        List<String> jsonField = new List<String>();
+        String json =  '{"JSON":{"Name":"Batch8", "ParentId":"abcd"},"Object Name":"Account"}}';
+        jsonField.add(json);
         EventFactory.createEvents(1, jsonField, true);
         system.test.startTest();
             BatchJSON batchObj = new BatchJSON();
@@ -110,7 +135,12 @@ private class JSONTestClass {
         System.assertEquals(false, event.IsProcessed__c);
     }
     static testMethod void bulkInvalidJSON() {
-        String jsonField = '{"JSON":{"Name":"Batch8"}"Object Name":"Account"}';
+        List<String> jsonField = new  List<String>();
+        for(Integer index=0 ; index<100 ; index++)
+        {
+           String json = '{"JSON":{"Name":"Batch"'+index+'}"Object Name":"Account"'+index+'}'; 
+           jsonField.add(json);
+        }
         EventFactory.createEvents(100, jsonField, true);
         system.test.startTest();
             BatchJSON batchObj = new BatchJSON();
@@ -123,7 +153,12 @@ private class JSONTestClass {
         }
     }
     static testMethod void bulkFieldEmpty() {
-        String jsonField = '';
+        List<String> jsonField = new List<String>();
+        for(Integer index=0 ; index<100 ; index++)
+        {
+           String json = ''; 
+           jsonField.add(json);
+        }
         EventFactory.createEvents(100, jsonField, true);
         system.test.startTest();
             BatchJSON batchObj = new BatchJSON();
@@ -136,7 +171,12 @@ private class JSONTestClass {
         }
     }
     static testMethod void bulkNoObject() {
-        String jsonField = '{"JSON":{"Name":"Batch8"}}';
+        List<String> jsonField = new List<String>();
+        for(Integer index=0 ; index<100 ; index++)
+        {
+           String json = '{"JSON":{"Name":"Batch8'+index+'"}}'; 
+           jsonField.add(json);
+        }
         EventFactory.createEvents(100, jsonField, true);
         system.test.startTest();
             BatchJSON batchObj = new BatchJSON();
@@ -149,7 +189,12 @@ private class JSONTestClass {
         }
     }
     static testMethod void bulkInvalidObjectName() {
-        String jsonField = '{"JSON":{"Name":"Batch8"},"Object Name":"Account1"}}';
+        List<String> jsonField = new  List<String>();
+        for(Integer index=0 ; index<100 ; index++)
+        {
+           String json = '{"JSON":{"Name":"Batch8'+index+'"},"Object Name":"Account1"}}'; 
+           jsonField.add(json);
+        }
         EventFactory.createEvents(100, jsonField, true);
         system.test.startTest();
             BatchJSON batchObj = new BatchJSON();
@@ -162,7 +207,12 @@ private class JSONTestClass {
         }
     }
     static testMethod void bulkNoJSON() {
-        String jsonField = '{"Object Name":"Account"}}';
+        List<String> jsonField = new  List<String>();
+        for(Integer index=0 ; index<100 ; index++)
+        {
+           String json = '{"Object Name":"Account"}}'; 
+           jsonField.add(json);
+        }
         EventFactory.createEvents(100, jsonField, true);
         system.test.startTest();
             BatchJSON batchObj = new BatchJSON();
@@ -174,9 +224,13 @@ private class JSONTestClass {
             System.assertEquals(System.Label.Event_NoJSON, event.Error_If_Any__c);
         }
     }
-
     static testMethod void bulkEmptyJSON() {
-        String jsonField = '{"JSON":"","Object Name":"Account"}}';
+        List<String> jsonField = new  List<String>();
+        for(Integer index=0 ; index<100 ; index++)
+        {
+           String json = '{"JSON":"","Object Name":"Account"}}'; 
+           jsonField.add(json);
+        }
         EventFactory.createEvents(100, jsonField, true);
         system.test.startTest();
             BatchJSON batchObj = new BatchJSON();
@@ -189,7 +243,12 @@ private class JSONTestClass {
         }
     }
     static testMethod void bulkInvalidField() {
-        String jsonField = '{"JSON":{"Name":"Batch8", "AccountNumber1":"11111"},"Object Name":"Account"}}';
+        List<String> jsonField = new  List<String>();
+        for(Integer index=0 ; index<100 ; index++)
+        {
+           String json = '{"JSON":{"Name":"Batch8'+index+'", "AccountNumber1":"11111'+index+'"},"Object Name":"Account"}}'; 
+           jsonField.add(json);
+        }
         EventFactory.createEvents(100, jsonField, true);
         system.test.startTest();
             BatchJSON batchObj = new BatchJSON();
@@ -202,7 +261,12 @@ private class JSONTestClass {
         }
     }
     static testMethod void bulkRequiredFieldNotProvided() {
-        String jsonField = '{"JSON":{"AccountNumber":"11111"},"Object Name":"Account"}}';
+        List<String> jsonField = new  List<String>();
+        for(Integer index=0 ; index<100 ; index++)
+        {
+           String json = '{"JSON":{"AccountNumber":"11111'+index+'"},"Object Name":"Account"}}'; 
+           jsonField.add(json);
+        }
         EventFactory.createEvents(100, jsonField, true);
         system.test.startTest();
             BatchJSON batchObj = new BatchJSON();
@@ -215,20 +279,32 @@ private class JSONTestClass {
         }
     }
     static testMethod void bulkSuccess() {
-        String jsonField = '{"JSON":{"Name":"Batch8", "AccountNumber":"11111"},"Object Name":"Account"}}';
-        EventFactory.createEvents(100, jsonField, true);
+        List<String> jsonField = new  List<String>();
+        for(Integer index=0 ; index<100 ; index++)
+        {
+           String json = '{"JSON":{"Name":"Batch8'+index+'", "AccountNumber":"11111'+index+'"},"Object name":"Account"}}'; 
+           jsonField.add(json);
+        }
+        List<Events__c> eventList = EventFactory.createEvents(100, jsonField, true);
         system.test.startTest();
             BatchJSON batchObj = new BatchJSON();
             database.executeBatch(batchObj);
         system.test.stopTest();
         List<Events__c> events = [Select IsProcessed__c, Error_If_Any__c from Events__c];
+        List<Account> accounts = [Select Id, name, accountNumber  from Account];
         for(Events__c event : events) {
             System.assertEquals(true, event.IsProcessed__c);
             System.assertEquals(null, event.Error_If_Any__c);
         }
+        System.assertEquals(eventList.size(), accounts.size());
     }
     static testMethod void bulkException() {
-        String jsonField = '{"JSON":{"Name":"Batch8", "Owner":"abcd"},"Object Name":"Account"}}';
+        List<String> jsonField = new  List<String>();
+        for(Integer index=0 ; index<100 ; index++)
+        {
+           String json = '{"JSON":{"Name":"Batch8'+index+'", "Owner":"abcd'+index+'"},"Object Name":"Account"}}'; 
+           jsonField.add(json);
+        }
         EventFactory.createEvents(100, jsonField, true);
         system.test.startTest();
             BatchJSON batchObj = new BatchJSON();
