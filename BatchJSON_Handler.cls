@@ -3,19 +3,20 @@ public with sharing class BatchJSON_Handler {
         List<sObject> recordList = new List<sObject>();
         Set<String> recordFields;
         Map<String,Schema.SObjectField> allFieldsOfObject;
+        Savepoint savePointForRollback = Database.setSavePoint();
         for(Events__c event : events) {
             Boolean isValidField = true, containsRequiredFields = true;
             if(String.isNotBlank(event.JSON__c)) {
                 try {
-                    Map<String, Object> jsonFieldMap = (Map<String, Object>)JSON.deserializeUntyped(event.JSON__c);
-                    String objectName = (String)jsonFieldMap.get('Object Name');
+                    Map<String, Object> jsonFieldMap = (Map<String, Object>)JSON.deserializeUntyped(event.JSON__c.toLowerCase());
+                    String objectName = (String)jsonFieldMap.get('object name');
                     if( String.isNotBlank(objectName)) {
-                        if(SObjectUtil.isObjectExist(ObjectName)) {
-                            if(jsonFieldMap.containsKey('JSON') && jsonFieldMap.get('JSON')!='') {
-                                String objectJson = JSON.serialize(jsonFieldMap.get('JSON'));
+                        if(SObjectUtil.isObjectExist(objectName)) {
+                            if(jsonFieldMap.containsKey('json') && jsonFieldMap.get('json')!='') {
+                                String objectJson = JSON.serialize(jsonFieldMap.get('json'));
                                 Map<String,String> jsonMap = (Map<String, String>)JSON.deserialize
                                                           (objectJson, Map<String, String>.class);
-                                Schema.SObjectType fetchedObjectType = Schema.getGlobalDescribe().get(ObjectName);
+                                Schema.SObjectType fetchedObjectType = Schema.getGlobalDescribe().get(objectName);
                                 sObject record = fetchedObjectType.newSObject();
                                 allFieldsOfObject = fetchedObjectType.getDescribe().fields.getMap() ;
                                 for(String fieldProvided: jsonMap.keySet()) {
@@ -28,15 +29,11 @@ public with sharing class BatchJSON_Handler {
                                     }
                                 }
                                 if(isValidField) {
-                                    recordFields=new Set<String>();
-                                    for(string fieldProvided : jsonMap.keySet()) {
-                                        recordFields.add(fieldProvided.toLowerCase());
-                                    }
                                     for(String field : allFieldsOfObject.keyset()) {
                                         Schema.DescribeFieldResult desribeResult =
                                                                         allFieldsOfObject.get(field).getDescribe();
                                         if( desribeResult.isCreateable() && !desribeResult.isNillable()
-                                            && !desribeResult.isDefaultedOnCreate() && !recordFields.contains(field.toLowerCase())) {
+                                            && !desribeResult.isDefaultedOnCreate() && !jsonMap.containsKey(field.toLowerCase())) {
                                                 containsRequiredFields = false;
                                                 event.Error_If_Any__c = System.Label.Event_RequiredNotProvided;
                                                 break;
@@ -67,6 +64,7 @@ public with sharing class BatchJSON_Handler {
             insert recordList;
             update events;
         } catch(Exception e) {
+            Database.rollback(savePointForRollback);
         }
     }
 }
