@@ -1,18 +1,18 @@
 public class QueryBuilderController {
     public List<SelectOption> objects {set;get;}
-    public List<SelectOption> selectedfieldOptions{set;get;}
+    public List<SelectOption> selectedFieldOptions{set;get;}
     public List<SelectOption> feildOptions{set;get;}
     public String selectedObj {set;get;}
-    public List<String> objlst {set;get;}
+    public List<String> objLst {set;get;}
     public List<String> fields{set;get;}
-    public Set<String> fieldselected{set;get;}
+    public Set<String> fieldSelected{set;get;}
     public List<String> fieldsTobeRetrieved{set;get;}
-    public Set<string> fieldnotselected{set;get;}
+    public Set<string> fieldNotSelected{set;get;}
     public Map<String, Schema.SObjectField> sObjectFields{set;get;}
-    public Map<String, Schema.SObjectType> sobjectType{set;get;}
+    public Map<String, Schema.SObjectType> sObjectType{set;get;}
     public String objDescription {set;get;}
-    public List<String> selectfields{set;get;}
-    public List<String> selectedfields{set;get;}
+    public List<String> selectFields{set;get;}
+    public List<String> selectedFields{set;get;}
     public String query{set;get;}
     public List<SObject> dataFromQuery{set;get;}
     public Boolean isObjSelected{set;get;}
@@ -30,27 +30,27 @@ public class QueryBuilderController {
         orderOptions = new List<SelectOption>();
         objects = new List<SelectOption>();
         fieldsTobeRetrieved = new List<String>();
-        objlst = new List<String>();
+        objLst = new List<String>();
         dataFromQuery = new List<SObject>();
-        selectfields = new List<String>();
-        selectedfields = new List<String>();
+        selectFields = new List<String>();
+        selectedFields = new List<String>();
         fields = new List<String>();
-        fieldselected = new Set<String>();
-        fieldnotselected = new Set<String>();
-        selectedfieldOptions = new List<SelectOption>();
+        fieldSelected = new Set<String>();
+        fieldNotSelected = new Set<String>();
+        selectedFieldOptions = new List<SelectOption>();
         feildOptions = new List<SelectOption>();
-        sobjectType = Schema.getGlobalDescribe();
-        for(Schema.SObjectType objToken : sobjectType.values())
+        sObjectType = Schema.getGlobalDescribe();
+        for(Schema.SObjectType objToken : sObjectType.values())
         {
             Schema.DescribeSObjectResult objDescribe = objToken.getDescribe();
             if (objDescribe.isAccessible() && objDescribe.isQueryable()){
-                objlst.add(objDescribe.getName());
+                objLst.add(objDescribe.getName());
             }
         }
-        objlst.sort();
+        objLst.sort();
         SelectOption none = new SelectOption('None','-None-');
         objects.add(none);
-        for(String stringObj : objlst)
+        for(String stringObj : objLst)
         {
             SelectOption option = new SelectOption(stringObj,stringObj);
             objects.add(option);
@@ -71,7 +71,7 @@ public class QueryBuilderController {
         {
             Schema.DescribeSObjectResult myObj = sobjectType.get(selectedObj).getDescribe();
             objDescription = ' '+myObj;
-            sObjectFields = sobjectType.get(selectedObj).getDescribe().fields.getMap();
+            sObjectFields = sObjectType.get(selectedObj).getDescribe().fields.getMap();
             fields.clear();
             for(Schema.SObjectField fieldToken : sObjectFields.values())
             {
@@ -82,9 +82,9 @@ public class QueryBuilderController {
                 }
             }
             fields.sort();
-            fieldnotselected.clear();
-            fieldselected.clear();
-            fieldnotselected.addAll(fields);
+            fieldNotSelected.clear();
+            fieldSelected.clear();
+            fieldNotSelected.addAll(fields);
             isObjSelected = true;
             show();
         } 
@@ -96,32 +96,31 @@ public class QueryBuilderController {
     public void show()
     {
         feildOptions.clear();
-        selectedfieldOptions.clear();
-        for(String s : fieldnotselected)
+        selectedFieldOptions.clear();
+        for(String stringObj : fieldNotSelected)
         {
-            SelectOption op = new SelectOption(s,s);
-            feildOptions.add(op);
+            SelectOption options = new SelectOption(stringObj,stringObj);
+            feildOptions.add(options);
         }
-        System.debug('After Show ::: '+feildOptions);
-        for(String s : fieldselected)
+        for(String stringObj : fieldSelected)
         {
-            SelectOption op = new SelectOption(s,s);
-            selectedfieldOptions.add(op);
+            SelectOption options = new SelectOption(stringObj,stringObj);
+            selectedFieldOptions.add(options);
         }
     }
     public void addFields(){
-        fieldnotselected.removeAll(selectfields);
-        fieldselected.addAll(selectfields);
+        fieldNotSelected.removeAll(selectFields);
+        fieldSelected.addAll(selectFields);
         show();
     }
     public void removeFields(){
-        fieldnotselected.addAll(selectedfields);
-        fieldselected.removeAll(selectedfields);
+        fieldNotSelected.addAll(selectedFields);
+        fieldSelected.removeAll(selectedFields);
         show();
     }
     public void queryData(){
         fieldsTobeRetrieved.clear();
-        fieldsTobeRetrieved.addAll(fieldselected);
+        fieldsTobeRetrieved.addAll(fieldSelected);
         query = 'SELECT ';
         query += String.join(fieldsTobeRetrieved, ',');
         query += ' FROM '+ selectedObj +' ORDER BY Id '+selectedOrder+' LIMIT '+ selectedLimit;
@@ -133,9 +132,9 @@ public class QueryBuilderController {
                     ApexPages.addmessage(new ApexPages.message(ApexPages.severity.ERROR,system.label.NoRecordAvailable));
                 }
                 isQueryExecuted = true;
-            }catch(Exception e)
+            }catch(Exception exp)
             {
-                ApexPages.addmessage(new ApexPages.message(ApexPages.severity.ERROR,e.getMessage()));
+                ApexPages.addmessage(new ApexPages.message(ApexPages.severity.ERROR,exp.getMessage()));
             }
         } 
         else
