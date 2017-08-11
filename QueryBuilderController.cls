@@ -69,8 +69,8 @@ public class QueryBuilderController {
         query = '';
         if(selectedObj != 'None')
         {
-            Schema.DescribeSObjectResult myObj = sobjectType.get(selectedObj).getDescribe();
-            objDescription = ' '+myObj;
+            Schema.DescribeSObjectResult resultObj = sobjectType.get(selectedObj).getDescribe();
+            objDescription = ' '+resultObj;
             sObjectFields = sObjectType.get(selectedObj).getDescribe().fields.getMap();
             fields.clear();
             for(Schema.SObjectField fieldToken : sObjectFields.values())
