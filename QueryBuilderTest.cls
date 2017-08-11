@@ -14,11 +14,11 @@ private class QueryBuilderTest {
         controller.details();
         system.test.stopTest();
         System.assert(controller.fields != NULL);
-        System.assert(controller.fieldnotselected != NULL);
-        System.assert(controller.fieldselected.isEmpty());
+        System.assert(controller.fieldNotSelected != NULL);
+        System.assert(controller.fieldSelected.isEmpty());
         System.assertEquals(true,controller.isObjSelected);
         System.assertEquals(controller.feildOptions.size(),controller.fields.size());
-        System.assert(controller.selectedfieldOptions.isEmpty());
+        System.assert(controller.selectedFieldOptions.isEmpty());
     }
     static testMethod void testFieldSelectedScenario()
     {
@@ -26,19 +26,19 @@ private class QueryBuilderTest {
         QueryBuilderController controller = new QueryBuilderController();
         controller.selectedObj = 'account';
         controller.details();
-        controller.selectfields.add('AccountNumber');
-        controller.selectfields.add('Name');
+        controller.selectFields.add('AccountNumber');
+        controller.selectFields.add('Name');
         controller.addFields();
         system.test.stopTest();
-        System.assert(controller.fieldselected != NULL);
-        System.assert(controller.fieldselected.contains('AccountNumber'));
-        System.assert(controller.fieldselected.contains('Name'));
-        System.assert(!controller.fieldnotselected.contains('AccountNumber'));
-        System.assert(!controller.fieldnotselected.contains('Name'));
-        controller.selectedfields.add('AccountNumber');
+        System.assert(controller.fieldSelected != NULL);
+        System.assert(controller.fieldSelected.contains('AccountNumber'));
+        System.assert(controller.fieldSelected.contains('Name'));
+        System.assert(!controller.fieldNotSelected.contains('AccountNumber'));
+        System.assert(!controller.fieldNotSelected.contains('Name'));
+        controller.selectedFields.add('AccountNumber');
         controller.removeFields();
-        System.assert(controller.fieldnotselected.contains('AccountNumber'));
-        System.assert(!controller.fieldselected.contains('AccountNumber'));
+        System.assert(controller.fieldNotSelected.contains('AccountNumber'));
+        System.assert(!controller.fieldSelected.contains('AccountNumber'));
     }
     static testMethod void testNoneObjectSelectedScenario()
     {
@@ -46,8 +46,8 @@ private class QueryBuilderTest {
         QueryBuilderController controller = new QueryBuilderController();
         controller.selectedObj = 'account';
         controller.details();
-        controller.selectfields.add('AccountNumber');
-        controller.selectfields.add('Name');
+        controller.selectFields.add('AccountNumber');
+        controller.selectFields.add('Name');
         controller.addFields();
         controller.selectedObj = 'None';
         controller.details();
@@ -61,8 +61,8 @@ private class QueryBuilderTest {
         QueryBuilderController controller = new QueryBuilderController();
         controller.selectedObj = 'account';
         controller.details();
-        controller.selectfields.add('AccountNumber');
-        controller.selectfields.add('Name');
+        controller.selectFields.add('AccountNumber');
+        controller.selectFields.add('Name');
         controller.addFields();
         controller.queryData();
         system.test.stopTest();
@@ -91,11 +91,11 @@ private class QueryBuilderTest {
         QueryBuilderController controller = new QueryBuilderController();
         controller.selectedObj = 'account';
         controller.details();
-        controller.selectfields.add('LastName');
+        controller.selectFields.add('LastName');
         controller.addFields();
         controller.queryData();
         system.Test.stopTest();
-        System.assertEquals(controller.fieldselected.size(),controller.fieldsTobeRetrieved.size());
+        System.assertEquals(controller.fieldSelected.size(),controller.fieldsTobeRetrieved.size());
         System.assertEquals('SELECT LastName FROM account ORDER BY Id ASC LIMIT 500',controller.query);
         List<Apexpages.Message> msgs = ApexPages.getMessages();
         System.assertEquals('No such column \'LastName\' on entity \'Account\'. If you are attempting to use a custom field, be sure to append the \'__c\' after the custom field name. Please reference your WSDL or the describe call for the appropriate names.',msgs[0].getDetail(),'Page is not returing error message even when invalid fields are selected');
