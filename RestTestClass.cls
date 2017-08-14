@@ -68,9 +68,9 @@ private class RestTestClass {
         request.httpMethod = 'PATCH';
         List<lead> leads= LeadFactory.createAndInsertLeads(2);
         system.test.startTest();
-            RestServiceForManupulatingLeads.updateLead('Lead1','Lead#1','abc@gmail.com','22222','epl');
+            RestServiceForManupulatingLeads.updateLead('Lead1','Lead#1','abc@gmail.com','22222');
         system.test.stopTest();
-        List<lead> leadList = [Select firstname, lastname, email, phone, company from lead];
+        List<lead> leadList = [Select firstname, lastname, email, phone from lead];
         system.assertEquals(leads.size(),leadList.size());
         system.assertNotEquals(leads[0].Phone,leadList[0].Phone);
     }
@@ -81,9 +81,9 @@ private class RestTestClass {
         request.httpMethod = 'PATCH';
         List<lead> leads= LeadFactory.createAndInsertLeads(2);
         system.test.startTest();
-            RestServiceForManupulatingLeads.updateLead('Lead1','Lead#1','abc','22222','epl');
+            RestServiceForManupulatingLeads.updateLead('Lead1','Lead#1','abc','22222');
         system.test.stopTest();
-        List<lead> leadList = [Select firstname, lastname, email, phone, company from lead];
+        List<lead> leadList = [Select firstname, lastname, email, phone from lead];
         system.assertEquals(leads.size(),leadList.size());
         system.assertEquals(leads[0].Phone,leadList[0].Phone);
     }
