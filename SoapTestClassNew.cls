@@ -46,7 +46,7 @@ private class SoapTestClassNew {
         List<lead> leads= LeadFactory.createAndInsertLeads(2);
         system.test.startTest();
             SoapServiceForManupulatingLeads.Response responseObj = new SoapServiceForManupulatingLeads.Response(); 
-            responseObj = SoapServiceForManupulatingLeads.updateLead('Lead1','Lead#1','abc@gmail.com','1234','ESP');
+            responseObj = SoapServiceForManupulatingLeads.updateLead('Lead1','Lead#1','abc@gmail.com','1234');
         system.test.stopTest();
         List<lead> leadList = [Select firstname, lastname, email, phone, company from lead];
         system.assertEquals(true , responseObj.isSuccess);
@@ -57,7 +57,7 @@ private class SoapTestClassNew {
         List<lead> leads= LeadFactory.createAndInsertLeads(2);
         system.test.startTest();
             SoapServiceForManupulatingLeads.Response responseObj = new SoapServiceForManupulatingLeads.Response(); 
-            responseObj = SoapServiceForManupulatingLeads.updateLead('','Lead#1','abc@gmail.com','1234','ESP');
+            responseObj = SoapServiceForManupulatingLeads.updateLead('','Lead#1','abc@gmail.com','1234');
         system.test.stopTest();
         List<lead> leadList = [Select firstname, lastname, email, phone, company from lead];
         system.assertEquals(false , responseObj.isSuccess);
