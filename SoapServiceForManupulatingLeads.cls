@@ -51,7 +51,7 @@ global class SoapServiceForManupulatingLeads {
              return response;
           }
     }
-    webservice static Response updateLead(String firstName, String lastName,String email, String phone, String company)
+    webservice static Response updateLead(String firstName, String lastName,String email, String phone)
     {
         try
         {
