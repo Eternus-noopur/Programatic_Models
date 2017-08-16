@@ -53,7 +53,7 @@ global with sharing class RestServiceForManupulatingLeads {
     }
      
     @HttpPatch
-    global static void updateLead(String firstName, String lastName,String email, String phone, String Company)
+    global static void updateLead(String firstName, String lastName,String email, String phone)
     {
         RestRequest request = RestContext.request;
         RestResponse response = RestContext.response;
