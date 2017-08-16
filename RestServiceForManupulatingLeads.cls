@@ -2,7 +2,7 @@
 global with sharing class RestServiceForManupulatingLeads {
 
     @HttpPost
-    global static void createLead(String firstName, String lastName,String email, String phone, String company)
+    global static void createLead(String firstName, String lastName, String email, String phone, String company)
     {
         RestRequest request = RestContext.request;
         RestResponse response = RestContext.response;
@@ -41,7 +41,7 @@ global with sharing class RestServiceForManupulatingLeads {
                                   Email=: email AND Phone =: phone];
             delete lead[0];
             response.addHeader('Content-Type', 'application/json');
-            String jsonResponse = '{"response": {"isSuccess": "True", "Lead":"' +firstname+Lastname+'","Status":"Success" }}';
+            String jsonResponse = '{"response": {"isSuccess": "True", "Lead":"' +firstName+lastName+'","Status":"Success" }}';
             response.responseBody = blob.valueOf(jsonResponse);
         }
         catch(Exception exp)
