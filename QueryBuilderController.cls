@@ -1,36 +1,37 @@
 public class QueryBuilderController {
-    public List<SelectOption> objects {set;get;}
-    public List<SelectOption> selectedFieldOptions{set;get;}
-    public List<SelectOption> feildOptions{set;get;}
-    public String selectedObj {set;get;}
-    public List<String> objLst {set;get;}
-    public List<String> fields{set;get;}
-    public Set<String> fieldSelected{set;get;}
-    public List<String> fieldsTobeRetrieved{set;get;}
-    public Set<string> fieldNotSelected{set;get;}
-    public Map<String, Schema.SObjectField> sObjectFields{set;get;}
-    public Map<String, Schema.SObjectType> sObjectType{set;get;}
-    public String objDescription {set;get;}
-    public List<String> selectFields{set;get;}
-    public List<String> selectedFields{set;get;}
-    public String query{set;get;}
-    public List<SObject> dataFromQuery{set;get;}
-    public Boolean isObjSelected{set;get;}
-    public Boolean isQueryExecuted{set;get;}
-    public List<SelectOption> limitOptions {set;get;}
-    public String selectedLimit {set;get;}
-    public String selectedOrder{set;get;}
-    public List<SelectOption> orderOptions{set;get;}
+    public List<SelectOption> objects {get;set;}
+    public List<SelectOption> selectedFieldOptions {get;set;}
+    public List<SelectOption> feildOptions {get;set;}
+    public String selectedObj {get;set;}
+    public List<String> objLst {get;set;}
+    public List<String> fields {get;set;}
+    public Set<String> fieldSelected {get;set;}
+    public List<String> fieldsTobeRetrieved {get;set;}
+    public Set<string> fieldNotSelected {get;set;}
+    public Map<String, Schema.SObjectField> sObjectFields {get;set;}
+    public Map<String, Schema.SObjectType> sObjectType {get;set;}
+    public String objDescription {get;set;}
+    public List<String> selectFields {get;set;}
+    public List<String> selectedFields {get;set;}
+    public String query {get;set;}
+    public List<SObject> dataFromQuery {get;set;}
+    public Boolean isObjSelected {get;set;}
+    public Boolean isQueryExecuted {get;set;}
+    public List<SelectOption> limitOptions {get;set;}
+    public String selectedLimit {get;set;}
+    public String selectedOrder {get;set;}
+    public List<SelectOption> orderOptions {get;set;}
 
     public QueryBuilderController() 
     {
+        sObjectType = Schema.getGlobalDescribe();
+        objects = new List<SelectOption>();
+        objLst = new List<String>();
         isObjSelected = false;
         isQueryExecuted = false;
         limitOptions = new List<SelectOption>();
         orderOptions = new List<SelectOption>();
-        objects = new List<SelectOption>();
         fieldsTobeRetrieved = new List<String>();
-        objLst = new List<String>();
         dataFromQuery = new List<SObject>();
         selectFields = new List<String>();
         selectedFields = new List<String>();
@@ -39,7 +40,7 @@ public class QueryBuilderController {
         fieldNotSelected = new Set<String>();
         selectedFieldOptions = new List<SelectOption>();
         feildOptions = new List<SelectOption>();
-        sObjectType = Schema.getGlobalDescribe();
+       
         for(Schema.SObjectType objToken : sObjectType.values())
         {
             Schema.DescribeSObjectResult objDescribe = objToken.getDescribe();
@@ -76,7 +77,7 @@ public class QueryBuilderController {
             for(Schema.SObjectField fieldToken : sObjectFields.values())
             {
                 Schema.DescribeFieldResult fieldDescribe = fieldToken.getDescribe();
-                if(fieldDescribe.isAccessible())
+                if(fieldDescribe.isAccessible() && String.valueOf(fieldDescribe.getSoapType())!= 'ADDRESS' )
                 {
                     fields.add(fieldDescribe.getName());
                 }
@@ -130,6 +131,7 @@ public class QueryBuilderController {
                 dataFromQuery = Database.query(query);
                 if(dataFromQuery.size()<1){
                     ApexPages.addmessage(new ApexPages.message(ApexPages.severity.ERROR,system.label.NoRecordAvailable));
+                    
                 }
                 isQueryExecuted = true;
             }catch(Exception exp)
