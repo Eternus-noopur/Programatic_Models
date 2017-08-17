@@ -131,7 +131,6 @@ public class QueryBuilderController {
                 dataFromQuery = Database.query(query);
                 if(dataFromQuery.size()<1){
                     ApexPages.addmessage(new ApexPages.message(ApexPages.severity.ERROR,system.label.NoRecordAvailable));
-                    
                 }
                 isQueryExecuted = true;
             }catch(Exception exp)
