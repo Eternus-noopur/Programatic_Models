@@ -6,7 +6,7 @@ public class QueryBuilderController {
     public List<String> objLst {get;set;}
     public List<String> fields {get;set;}
     public Set<String> fieldSelected {get;set;}
-    public List<String> fieldsTobeRetrieved {get;set;}
+    public List<String> fieldsToBeRetrieved {get;set;}
     public Set<string> fieldNotSelected {get;set;}
     public Map<String, Schema.SObjectField> sObjectFields {get;set;}
     public Map<String, Schema.SObjectType> sObjectType {get;set;}
@@ -31,7 +31,7 @@ public class QueryBuilderController {
         isQueryExecuted = false;
         limitOptions = new List<SelectOption>();
         orderOptions = new List<SelectOption>();
-        fieldsTobeRetrieved = new List<String>();
+        fieldsToBeRetrieved = new List<String>();
         dataFromQuery = new List<SObject>();
         selectFields = new List<String>();
         selectedFields = new List<String>();
@@ -120,12 +120,12 @@ public class QueryBuilderController {
         show();
     }
     public void queryData(){
-        fieldsTobeRetrieved.clear();
-        fieldsTobeRetrieved.addAll(fieldSelected);
+        fieldsToBeRetrieved.clear();
+        fieldsToBeRetrieved.addAll(fieldSelected);
         query = 'SELECT ';
         query += String.join(fieldsTobeRetrieved, ',');
         query += ' FROM '+ selectedObj +' ORDER BY Id '+selectedOrder+' LIMIT '+ selectedLimit;
-        if(fieldsTobeRetrieved.size()>=1)
+        if(fieldsToBeRetrieved.size()>=1)
         {
             try{
                 dataFromQuery = Database.query(query);
